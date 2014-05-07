@@ -8,6 +8,7 @@ dependencies[] = image
 dependencies[] = list
 dependencies[] = node
 dependencies[] = options
+dependencies[] = restws
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
