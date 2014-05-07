@@ -1,2 +1,123 @@
 <?php
 
+/**
+ * Implements hook_restws_resource_info().
+ *
+ * Adds a mapping layer between Publisher API and entity types.
+ */
+function pubapi_restws_resource_info() {
+  foreach (pubapi_get_structure() as $type => $info) {
+    $result[$type] = array(
+      'label' => $info['label'],
+      'class' => 'PubApiResourceController',
+    );
+  }
+  return $result;
+}
+
+/**
+ * POC dummy map.
+ *
+ * This will be replaced by the mapping UI Alex R is working on.
+ */
+function pubapi_get_map() {
+  $map = array();
+
+  $map['show'] = array(
+    'entity' => 'node', // Internal.
+    'bundle' => 'page', // Internal.
+    'name' => 'title',
+    //'id' => 'nid', // Will get automatically from entity_get_info().
+    'description' => 'body',
+    'genre' => 'field_genre',
+    'status' => 'status',
+  );
+
+  $map['season'] = array(
+    'entity' => 'node',
+    'bundle' => 'season',
+    'name' => 'title',
+    'description' => 'body',
+    'show' => 'field_show',
+    'status' => 'status',
+  );
+
+  $map['episode'] = array(
+    'entity' => 'node',
+    'bundle' => 'episode',
+    'name' => 'title',
+    'description' => 'body',
+    'show' => 'field_show',
+    'season' => 'field_season',
+    'status' => 'status',
+  );
+
+  $map['blog'] = array(
+    'entity' => 'node',
+    'bundle' => 'article',
+    'name' => 'title',
+    'description' => 'body',
+    'show' => 'field_show',
+    'season' => 'field_season',
+    'episode' => 'field_episode',
+    'status' => 'status',
+  );
+
+  return $map;
+}
+
+/**
+ * POC structure.
+ */
+function pubapi_get_structure() {
+  $structure = array();
+
+  $structure['show'] = array(
+    'label' => t('Show'),
+    'fields' => array(
+      'name' => t('String: The show name.'),
+      'id' => t('Int: The show ID'),
+      'description' => t('String: Terse show description.'),
+      'genre' => t('String: Show genre (example: Reality).'),
+      'status' => t('Bool: published state.'),
+    ),
+  );
+
+  $structure['season'] = array(
+    'label' => t('Season'),
+    'fields' => array(
+      'name' => t('String: The season name.'),
+      'id' => t('Int: The season ID'),
+      'description' => t('String: Terse season description.'),
+      'show' => t('Int: The season\'s show ID.'),
+      'status' => t('Bool: published state.'),
+    ),
+  );
+
+  $structure['episode'] = array(
+    'label' => t('Episode'),
+    'fields' => array(
+      'name' => t('String: The episode name.'),
+      'id' => t('Int: The episode ID'),
+      'description' => t('String: Terse episode description.'),
+      'show' => t('Int: The episode\'s show ID.'),
+      'season' => t('Int: The episode\'s season ID.'),
+      'status' => t('Bool: published state.'),
+    ),
+  );
+
+  $structure['blog'] = array(
+    'label' => t('Blog'),
+    'fields' => array(
+      'name' => t('String: The blog name.'),
+      'id' => t('Int: The blog ID'),
+      'description' => t('String: Terse blog description.'),
+      'show' => t('Int: The blog\'s show ID.'),
+      'season' => t('Int: The blog\'s season ID.'),
+      'episode' => t('Int: The blog\'s episode ID.'),
+      'status' => t('Bool: published state.'),
+    ),
+  );
+
+  return $structure;
+}
