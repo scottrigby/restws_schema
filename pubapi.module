@@ -6,6 +6,7 @@
  * Adds a mapping layer between Publisher API and entity types.
  */
 function pubapi_restws_resource_info() {
+  $result = array();
   foreach (pubapi_get_structure() as $type => $info) {
     $result[$type] = array(
       'label' => $info['label'],
@@ -27,7 +28,8 @@ function pubapi_get_map() {
     'entity' => 'node', // Internal.
     'bundle' => 'page', // Internal.
     'name' => 'title',
-    //'id' => 'nid', // Will get automatically from entity_get_info().
+    // @todo get automatically from entity_get_info().
+    'id' => 'nid',
     'description' => 'body',
     'genre' => 'field_genre',
     'status' => 'status',
@@ -37,6 +39,7 @@ function pubapi_get_map() {
     'entity' => 'node',
     'bundle' => 'season',
     'name' => 'title',
+    'id' => 'nid',
     'description' => 'body',
     'show' => 'field_show',
     'status' => 'status',
@@ -46,6 +49,7 @@ function pubapi_get_map() {
     'entity' => 'node',
     'bundle' => 'episode',
     'name' => 'title',
+    'id' => 'nid',
     'description' => 'body',
     'show' => 'field_show',
     'season' => 'field_season',
@@ -56,6 +60,7 @@ function pubapi_get_map() {
     'entity' => 'node',
     'bundle' => 'article',
     'name' => 'title',
+    'id' => 'nid',
     'description' => 'body',
     'show' => 'field_show',
     'season' => 'field_season',
@@ -74,48 +79,163 @@ function pubapi_get_structure() {
 
   $structure['show'] = array(
     'label' => t('Show'),
-    'fields' => array(
-      'name' => t('String: The show name.'),
-      'id' => t('Int: The show ID'),
-      'description' => t('String: Terse show description.'),
-      'genre' => t('String: Show genre (example: Reality).'),
-      'status' => t('Bool: published state.'),
+    'properties' => array(
+      'name' => array(
+        'type' => 'text',
+        'label' => t('Show name'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'id' => array(
+        'type' => 'integer',
+        'label' => t('Show ID'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'label' => t('Show description'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'genre' => array(
+        'type' => 'text',
+        'label' => t('Show genre'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'status' => array(
+        'type' => 'integer',
+        'label' => t('Show published status'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
     ),
   );
 
   $structure['season'] = array(
     'label' => t('Season'),
-    'fields' => array(
-      'name' => t('String: The season name.'),
-      'id' => t('Int: The season ID'),
-      'description' => t('String: Terse season description.'),
-      'show' => t('Int: The season\'s show ID.'),
-      'status' => t('Bool: published state.'),
+    'properties' => array(
+      'name' => array(
+        'type' => 'text',
+        'label' => t('Season name'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'id' => array(
+        'type' => 'integer',
+        'label' => t('Season ID'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'label' => t('Season description'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'show' => array(
+        'type' => 'integer',
+        'label' => t("The season's show ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'status' => array(
+        'type' => 'integer',
+        'label' => t('Season published status'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
     ),
   );
 
   $structure['episode'] = array(
     'label' => t('Episode'),
-    'fields' => array(
-      'name' => t('String: The episode name.'),
-      'id' => t('Int: The episode ID'),
-      'description' => t('String: Terse episode description.'),
-      'show' => t('Int: The episode\'s show ID.'),
-      'season' => t('Int: The episode\'s season ID.'),
-      'status' => t('Bool: published state.'),
+    'properties' => array(
+      'name' => array(
+        'type' => 'text',
+        'label' => t('Episode name'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'id' => array(
+        'type' => 'integer',
+        'label' => t('Episode ID'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'label' => t('Episode description'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'show' => array(
+        'type' => 'integer',
+        'label' => t("The episode's show ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'season' => array(
+        'type' => 'integer',
+        'label' => t("The episode's season ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'status' => array(
+        'type' => 'integer',
+        'label' => t('Episode published status'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
     ),
   );
 
   $structure['blog'] = array(
     'label' => t('Blog'),
-    'fields' => array(
-      'name' => t('String: The blog name.'),
-      'id' => t('Int: The blog ID'),
-      'description' => t('String: Terse blog description.'),
-      'show' => t('Int: The blog\'s show ID.'),
-      'season' => t('Int: The blog\'s season ID.'),
-      'episode' => t('Int: The blog\'s episode ID.'),
-      'status' => t('Bool: published state.'),
+    'properties' => array(
+      'name' => array(
+        'type' => 'text',
+        'label' => t('Blog name'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'id' => array(
+        'type' => 'integer',
+        'label' => t('Blog ID'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'label' => t('Blog description'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'show' => array(
+        'type' => 'integer',
+        'label' => t("The blog's show ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'season' => array(
+        'type' => 'integer',
+        'label' => t("The blog's season ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'episode' => array(
+        'type' => 'integer',
+        'label' => t("The blog's episode ID"),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
+      'status' => array(
+        'type' => 'integer',
+        'label' => t('Blog published status'),
+        'setter callback' => 'entity_property_verbatim_set',
+        'getter callback' => 'entity_property_verbatim_get',
+      ),
     ),
   );
 
