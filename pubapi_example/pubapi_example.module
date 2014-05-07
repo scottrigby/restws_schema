@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the pubapi_example feature.
+ */
+
+include_once 'pubapi_example.features.inc';
