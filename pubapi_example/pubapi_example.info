@@ -2,6 +2,7 @@ name = pubapi_example
 core = 7.x
 package = Other
 dependencies[] = ctools
+dependencies[] = devel_generate
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = image
