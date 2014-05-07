@@ -17,62 +17,31 @@ function pubapi_restws_resource_info() {
 }
 
 /**
- * POC dummy map.
+ * Gets the API to Entity property map.
  *
- * This will be replaced by the mapping UI Alex R is working on.
+ * @todo Get the 'id' key from entity_get_info().
+ * @todo Replace the 'pubapi_map' variable with the forthcoming mapping UI.
+ *
+ * @return array
+ *   An associative array of info explaining how Drupal entities map to our API.
+ *   Containing:
+ *   - entity: The mapped entity type
+ *   - bundle: The mapped bundle name
+ *   - id: The entity ID key
+ *   - ADDITIONAL PROPERTY INFO REQUIRED BY OUR API SCHEMA.
  */
 function pubapi_get_map() {
-  $map = array();
-
-  $map['show'] = array(
-    'entity' => 'node', // Internal.
-    'bundle' => 'page', // Internal.
-    'name' => 'title',
-    // @todo get automatically from entity_get_info().
-    'id' => 'nid',
-    'description' => 'body',
-    'genre' => 'field_genre',
-    'status' => 'status',
-  );
-
-  $map['season'] = array(
-    'entity' => 'node',
-    'bundle' => 'season',
-    'name' => 'title',
-    'id' => 'nid',
-    'description' => 'body',
-    'show' => 'field_show',
-    'status' => 'status',
-  );
-
-  $map['episode'] = array(
-    'entity' => 'node',
-    'bundle' => 'episode',
-    'name' => 'title',
-    'id' => 'nid',
-    'description' => 'body',
-    'show' => 'field_show',
-    'season' => 'field_season',
-    'status' => 'status',
-  );
-
-  $map['blog'] = array(
-    'entity' => 'node',
-    'bundle' => 'article',
-    'name' => 'title',
-    'id' => 'nid',
-    'description' => 'body',
-    'show' => 'field_show',
-    'season' => 'field_season',
-    'episode' => 'field_episode',
-    'status' => 'status',
-  );
-
-  return $map;
+  return variable_get('pubapi_map', array());
 }
 
 /**
- * POC structure.
+ * Gets a POC API schema info.
+ *
+ * @return array
+ *   An associative array, containing:
+ *   - label: The REST resource object label.
+ *   - properties: An array of property information suitable for the $info param
+ *     of entity_metadata_wrapper()
  */
 function pubapi_get_structure() {
   $structure = array();

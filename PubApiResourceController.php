@@ -50,22 +50,23 @@ class PubApiResourceController
     $original_properties = $original_wrapper->getPropertyInfo();
 
     // Add to our object according to our defined API property info.
-    $map = $this->apiMap[$this->apiName];
-    foreach (array_keys($info['properties']) as $property) {
-      if (array_key_exists($map[$property], $original_properties)) {
-        $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
-        // For now make a quick check for references, and get just the ID.
-        // @todo abstract this with a getter callback wrapper or something for
-        //   entityreference.
-        if (in_array($property, array('show', 'season', 'episode'))) {
-          $value = isset($value->nid) ? $value->nid : NULL;
+    if ($map = $this->apiMap[$this->apiName]) {
+      foreach (array_keys($info['properties']) as $property) {
+        if (array_key_exists($map[$property], $original_properties)) {
+          $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
+          // For now make a quick check for references, and get just the ID.
+          // @todo abstract this with a getter callback wrapper or something for
+          //   entityreference.
+          if (in_array($property, array('show', 'season', 'episode'))) {
+            $value = isset($value->nid) ? $value->nid : NULL;
+          }
+          // If the value is an array, it's a filtered text field. Example for
+          // body: $wrapper->body->value->value(array('decode' => TRUE));
+          // @todo abstract this.
+          $value = is_object($value) ? $value->value(array('decode' => TRUE)) : $value;
+          $value = is_array($value) ? $original_wrapper->{$map[$property]}->value->value(array('decode' => TRUE)) : $value;
+          $object->{$property} = $value;
         }
-        // If the value is an array, it's a filtered text field. Example for
-        // body: $wrapper->body->value->value(array('decode' => TRUE));
-        // @todo abstract this.
-        $value = is_object($value) ? $value->value(array('decode' => TRUE)) : $value;
-        $value = is_array($value) ? $original_wrapper->{$map[$property]}->value->value(array('decode' => TRUE)) : $value;
-        $object->{$property} = $value;
       }
     }
 
