@@ -1,0 +1,3 @@
+name = pubapi_ui
+core = 7.x
+dependencies[] = pubapi
