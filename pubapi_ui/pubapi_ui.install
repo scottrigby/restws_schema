@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Publisher API UI installation.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function pubapi_ui_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  // Check Publisher API mapping configurations.
+  if ($phase == 'runtime') {
+    $ok = array(
+      'value' => $t('The Publisher API is satisfied.'),
+      'severity' => REQUIREMENT_OK,
+    );
+    $warning = array(
+      'value' => $t('The Publisher API is not satisfied. <a href="@url">Configure here</a>.', array('@url' => url('admin/config/services/pubapi'))),
+      'severity' => REQUIREMENT_WARNING,
+    );
+    $status = $ok;
+
+    $structure = pubapi_get_structure();
+    foreach ($structure as $resource => $info) {
+      $entity_type = variable_get("pubapi_ui_entity_type_{$resource}");
+      $bundle = variable_get("pubapi_ui_bundle_{$resource}");
+      if (!$entity_type || !$bundle) {
+        $status = $warning;
+        break;
+      }
+      foreach ($info['properties'] as $property_name => $property_info) {
+        $property = variable_get("pubapi_ui_{$resource}_property_{$property_name}");
+        if (!$property) {
+          $status = $warning;
+          break 2;
+        }
+      }
+    }
+
+    $requirements['pubapi_ui'] = array(
+      'title' => $t('Publisher API'),
+    ) + $status;
+  }
+
+  return $requirements;
+}
