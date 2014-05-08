@@ -30,6 +30,9 @@ class PubApiResourceController
     return entity_metadata_wrapper($this->apiName, $object, array('property info' => $info['properties']));
   }
 
+  /**
+   * @see RestWSResourceControllerInterface::read()
+   */
   public function read($id) {
     return $this->objectLoad($id);
   }
@@ -41,6 +44,17 @@ class PubApiResourceController
     return $this->apiName;
   }
 
+  /**
+   * Loads a Publisher API object.
+   *
+   * @param int $id
+   *   The original entity ID.
+   *
+   * @return stdClass
+   *   An object matching the requested Publisher API object structure.
+   *
+   * @todo Ensure the bundle mapping matches the requested resource entity.
+   */
   protected function objectLoad($id) {
     $object = new stdClass();
 
