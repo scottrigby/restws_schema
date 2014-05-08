@@ -282,49 +282,219 @@ function pubapi_example_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'pubapi_map';
-  $strongarm->value = array(
-    'show' => array(
-      'entity' => 'node',
-      'bundle' => 'page',
-      'name' => 'title',
-      'id' => 'nid',
-      'description' => 'body',
-      'genre' => 'field_genre',
-      'status' => 'status',
-    ),
-    'season' => array(
-      'entity' => 'node',
-      'bundle' => 'season',
-      'name' => 'title',
-      'id' => 'nid',
-      'description' => 'body',
-      'show' => 'field_show',
-      'status' => 'status',
-    ),
-    'episode' => array(
-      'entity' => 'node',
-      'bundle' => 'episode',
-      'name' => 'title',
-      'id' => 'nid',
-      'description' => 'body',
-      'show' => 'field_show',
-      'season' => 'field_season',
-      'status' => 'status',
-    ),
-    'blog' => array(
-      'entity' => 'node',
-      'bundle' => 'article',
-      'name' => 'title',
-      'id' => 'nid',
-      'description' => 'body',
-      'show' => 'field_show',
-      'season' => 'field_season',
-      'episode' => 'field_episode',
-      'status' => 'status',
-    ),
-  );
-  $export['pubapi_map'] = $strongarm;
+  $strongarm->name = 'pubapi_ui_blog_property_description';
+  $strongarm->value = 'body';
+  $export['pubapi_ui_blog_property_description'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_episode';
+  $strongarm->value = 'field_episode';
+  $export['pubapi_ui_blog_property_episode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_id';
+  $strongarm->value = 'nid';
+  $export['pubapi_ui_blog_property_id'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_name';
+  $strongarm->value = 'title';
+  $export['pubapi_ui_blog_property_name'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_season';
+  $strongarm->value = 'field_season';
+  $export['pubapi_ui_blog_property_season'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_show';
+  $strongarm->value = 'field_show';
+  $export['pubapi_ui_blog_property_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_blog_property_status';
+  $strongarm->value = 'status';
+  $export['pubapi_ui_blog_property_status'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_bundle_blog';
+  $strongarm->value = 'article';
+  $export['pubapi_ui_bundle_blog'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_bundle_episode';
+  $strongarm->value = 'episode';
+  $export['pubapi_ui_bundle_episode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_bundle_season';
+  $strongarm->value = 'season';
+  $export['pubapi_ui_bundle_season'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_bundle_show';
+  $strongarm->value = 'page';
+  $export['pubapi_ui_bundle_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_entity_type_blog';
+  $strongarm->value = 'node';
+  $export['pubapi_ui_entity_type_blog'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_entity_type_episode';
+  $strongarm->value = 'node';
+  $export['pubapi_ui_entity_type_episode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_entity_type_season';
+  $strongarm->value = 'node';
+  $export['pubapi_ui_entity_type_season'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_entity_type_show';
+  $strongarm->value = 'node';
+  $export['pubapi_ui_entity_type_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_description';
+  $strongarm->value = 'body';
+  $export['pubapi_ui_episode_property_description'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_id';
+  $strongarm->value = 'nid';
+  $export['pubapi_ui_episode_property_id'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_name';
+  $strongarm->value = 'title';
+  $export['pubapi_ui_episode_property_name'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_season';
+  $strongarm->value = 'field_season';
+  $export['pubapi_ui_episode_property_season'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_show';
+  $strongarm->value = 'field_show';
+  $export['pubapi_ui_episode_property_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_episode_property_status';
+  $strongarm->value = 'status';
+  $export['pubapi_ui_episode_property_status'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_season_property_description';
+  $strongarm->value = 'body';
+  $export['pubapi_ui_season_property_description'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_season_property_id';
+  $strongarm->value = 'nid';
+  $export['pubapi_ui_season_property_id'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_season_property_name';
+  $strongarm->value = 'title';
+  $export['pubapi_ui_season_property_name'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_season_property_show';
+  $strongarm->value = 'field_show';
+  $export['pubapi_ui_season_property_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_season_property_status';
+  $strongarm->value = 'status';
+  $export['pubapi_ui_season_property_status'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_show_property_description';
+  $strongarm->value = 'body';
+  $export['pubapi_ui_show_property_description'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_show_property_genre';
+  $strongarm->value = 'field_genre';
+  $export['pubapi_ui_show_property_genre'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_show_property_id';
+  $strongarm->value = 'nid';
+  $export['pubapi_ui_show_property_id'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_show_property_name';
+  $strongarm->value = 'title';
+  $export['pubapi_ui_show_property_name'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_show_property_status';
+  $strongarm->value = 'status';
+  $export['pubapi_ui_show_property_status'] = $strongarm;
 
   return $export;
 }
