@@ -20,7 +20,7 @@ function pubapi_ui_requirements($phase) {
     );
     $warning = array(
       'value' => $t('The Publisher API is not satisfied. <a href="@url">Configure here</a>.', array('@url' => url('admin/config/services/pubapi'))),
-      'severity' => REQUIREMENT_WARNING,
+      'severity' => REQUIREMENT_ERROR,
     );
     $status = $ok;
 
