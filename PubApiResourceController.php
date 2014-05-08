@@ -52,8 +52,6 @@ class PubApiResourceController
    *
    * @return stdClass
    *   An object matching the requested Publisher API object structure.
-   *
-   * @todo Ensure the bundle mapping matches the requested resource entity.
    */
   protected function objectLoad($id) {
     $object = new stdClass();
@@ -61,6 +59,12 @@ class PubApiResourceController
     // Get original entity.
     $info = $this->apiSpec[$this->apiName];
     $original_wrapper = entity_metadata_wrapper($this->entityType, $id);
+
+    // If the wrapped entity is not of the correct bundle, bail now.
+    if ($original_wrapper->getBundle() !== $this->bundleName) {
+      return $object;
+    }
+
     $original_properties = $original_wrapper->getPropertyInfo();
 
     // Add to our object according to our defined API property info.
