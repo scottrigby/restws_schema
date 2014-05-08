@@ -30,11 +30,24 @@ class PubApiResourceController
     return entity_metadata_wrapper($this->apiName, $object, array('property info' => $info['properties']));
   }
 
+  protected function originalWrapper($id) {
+    return parent::wrapper($id);
+  }
+
   /**
    * @see RestWSResourceControllerInterface::read()
    */
   public function read($id) {
     return $this->objectLoad($id);
+  }
+
+  /**
+   * @see RestWSResourceControllerInterface::access()
+   */
+  public function access($op, $id) {
+    // Check entity access on the original entity, not our API object (which
+    // will fail).
+    return entity_access($op, $this->entityType, isset($id) ? $this->originalWrapper($id)->value() : NULL);
   }
 
   /**
@@ -58,7 +71,7 @@ class PubApiResourceController
 
     // Get original entity.
     $info = $this->apiSpec[$this->apiName];
-    $original_wrapper = entity_metadata_wrapper($this->entityType, $id);
+    $original_wrapper = $this->originalWrapper($id);
 
     // If the wrapped entity is not of the correct bundle, bail now.
     if ($original_wrapper->getBundle() !== $this->bundleName) {
