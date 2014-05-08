@@ -19,9 +19,6 @@ function pubapi_restws_resource_info() {
 /**
  * Gets the API to Entity property map.
  *
- * @todo Get the 'id' key from entity_get_info().
- * @todo Replace the 'pubapi_map' variable with the forthcoming mapping UI.
- *
  * @return array
  *   An associative array of info explaining how Drupal entities map to our API.
  *   Containing:
@@ -31,11 +28,19 @@ function pubapi_restws_resource_info() {
  *   - ADDITIONAL PROPERTY INFO REQUIRED BY OUR API SCHEMA.
  */
 function pubapi_get_map() {
-  return variable_get('pubapi_map', array());
+  $map = array();
+  foreach (pubapi_get_structure() as $resource => $info) {
+    $map[$resource]['entity'] = variable_get("pubapi_ui_entity_type_{$resource}");
+    $map[$resource]['bundle'] = variable_get("pubapi_ui_bundle_{$resource}");
+    foreach (array_keys($info['properties']) as $property_name) {
+      $map[$resource][$property_name] = variable_get("pubapi_ui_{$resource}_property_{$property_name}");
+    }
+  }
+  return $map;
 }
 
 /**
- * Gets a POC API schema info.
+ * Gets POC API schema info.
  *
  * @return array
  *   An associative array, containing:
