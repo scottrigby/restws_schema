@@ -16,18 +16,28 @@ class PubApiResourceController
     $this->entityInfo = entity_get_info($this->apiMap[$name]['entity']);
   }
 
+  /**
+   * @see RestWSEntityResourceController::propertyInfo()
+   */
   public function propertyInfo() {
-    return $this->apiSpec;
+    return $this->apiSpec[$this->resource()]['properties'];
+  }
+
+  /**
+   * @see RestWSEntityResourceController::propertyInfo()
+   */
+  public function originalPropertyInfo() {
+    return entity_get_all_property_info($this->entityType);
   }
 
   /**
    * @see RestWSResourceControllerInterface::wrapper()
    */
   public function wrapper($id) {
-    $info = $this->apiSpec[$this->apiName];
+    $info = $this->apiSpec[$this->resource()];
     $object = $this->objectLoad($id);
 
-    return entity_metadata_wrapper($this->apiName, $object, array('property info' => $info['properties']));
+    return entity_metadata_wrapper($this->resource(), $object, array('property info' => $info['properties']));
   }
 
   protected function originalWrapper($id) {
@@ -52,6 +62,8 @@ class PubApiResourceController
 
   /**
    * @see RestWSResourceControllerInterface::resource()
+   *
+   * @return string
    */
   public function resource() {
     return $this->apiName;
@@ -70,7 +82,7 @@ class PubApiResourceController
     $object = new stdClass();
 
     // Get original entity.
-    $info = $this->apiSpec[$this->apiName];
+    $info = $this->apiSpec[$this->resource()];
     $original_wrapper = $this->originalWrapper($id);
 
     // If the wrapped entity is not of the correct bundle, bail now.
@@ -81,7 +93,7 @@ class PubApiResourceController
     $original_properties = $original_wrapper->getPropertyInfo();
 
     // Add to our object according to our defined API property info.
-    if ($map = $this->apiMap[$this->apiName]) {
+    if ($map = $this->apiMap[$this->resource()]) {
       foreach (array_keys($info['properties']) as $property) {
         if (array_key_exists($map[$property], $original_properties)) {
           $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
@@ -102,6 +114,147 @@ class PubApiResourceController
     }
 
     return $object;
+  }
+
+  /**
+   * @see RestWSEntityResourceController::query()
+   *
+   * We must override this because $this->resource() assumes entity type. Also
+   * we must filter by bundle, according to our map.
+   */
+  public function query($filters = array(), $meta_controls = array()) {
+    $limit = variable_get('restws_query_max_limit', 100);
+    $offset = 0;
+
+    $query = new EntityFieldQuery();
+//    $query->entityCondition('entity_type', $this->resource());
+    $query->entityCondition('entity_type', $this->entityType);
+
+    // Also filter by bundle, according to our map.
+    // If the entity type provides no bundle key: assume a single bundle, named
+    // after the entity type.
+    $bundle_key = isset($this->entityInfo['entity keys']['bundle']) ? $this->entityInfo['entity keys']['bundle'] : $this->entityType;
+    // @todo Resolve missing field/schema keys in our property info.
+    //   propertyQueryOperation::RestWSEntityResourceController assumes one or
+    //   the other.
+    $this->propertyQueryOperation($query, 'Condition', $bundle_key, $this->bundleName);
+
+    // @todo Map filters.
+    foreach ($filters as $filter => $value) {
+      $entity_filter = $this->apiMap[$this->resource()][$filter];
+      $this->propertyQueryOperation($query, 'Condition', $entity_filter, $value);
+    }
+
+    $rest_controls = restws_meta_controls();
+    foreach ($meta_controls as $control_name => $value) {
+      switch ($control_name) {
+        case $rest_controls['sort']:
+          if (isset($meta_controls[$rest_controls['direction']]) && strtolower($meta_controls[$rest_controls['direction']]) == 'desc') {
+            $direction = 'DESC';
+          }
+          else {
+            $direction = 'ASC';
+          }
+          $this->propertyQueryOperation($query, 'OrderBy', $value, $direction);
+          break;
+
+        case $rest_controls['limit']:
+          $limit = $this->limit($value);
+          break;
+
+        case $rest_controls['page']:
+          $offset = $value > 0 ? $value : $offset;
+          break;
+      }
+    }
+
+    // Calculate the offset.
+    $offset *= $limit;
+    $query->range($offset, $limit);
+
+    $this->nodeAccess($query);
+
+    // Catch any errors, like wrong keywords or properties.
+    try {
+      $query_result = $query->execute();
+    }
+    catch (PDOException $exception) {
+      throw new RestWSException('Query failed.', 400);
+    }
+//    $query_result = isset($query_result[$this->resource()]) ? $query_result[$this->resource()] : array();
+    $query_result = isset($query_result[$this->entityType]) ? $query_result[$this->entityType] : array();
+
+    $result = array_keys($query_result);
+
+    return $result;
+  }
+
+  /**
+   * @see RestWSEntityResourceController::count()
+   *
+   * We must override this because $this->resource() assumes entity type.
+   */
+  public function count($filters = array()) {
+    $query = new EntityFieldQuery();
+//    $query->entityCondition('entity_type', $this->resource());
+    $query->entityCondition('entity_type', $this->entityType);
+
+    // @todo Map filters.
+    foreach ($filters as $filter => $value) {
+      $entity_filter = $this->apiMap[$this->resource()][$filter];
+      $this->propertyQueryOperation($query, 'Condition', $entity_filter, $value);
+    }
+    $query->count();
+    $this->nodeAccess($query);
+
+    return $query->execute();
+  }
+
+  /**
+   * @see RestWSEntityResourceController::propertyQueryOperation()
+   *
+   * We must override this in order to map the fields before querrying.
+   *
+   * @todo Consider submitting a patch to restws for a new method
+   *   queryPropertymap(). If the parent method gave another layer between
+   *   propertyInfo() (which is used elsewhere, so must be set to our custom
+   *   object properties), and the query implementation, we could intercept it
+   *   and do mapping there. Until then, we need to override this entire method.
+   */
+  protected function propertyQueryOperation(EntityFieldQuery $query, $operation, $property, $value) {
+//    $properties = $this->propertyInfo();
+    // Get the original entity property info.
+    $properties = $this->originalPropertyInfo();
+    // Reset the $property key to the original entity's mapped property.
+//    $resource = $this->resource();
+//    $property = $this->apiMap[$this->resource()][$property];
+
+    // If field is not set, then the filter is a property and we can extract
+    // the schema field from the property array.
+    if (empty($properties[$property]['field'])) {
+      $column = $properties[$property]['schema field'];
+      $operation = 'property' . $operation;
+      $query->$operation($column, $value);
+    }
+    else {
+      // For fields we need the field info to get the right column for the
+      // query.
+      $field_info = field_info_field($property);
+      $operation = 'field' . $operation;
+      if (is_array($value)) {
+        // Specific column filters are given, so add a query condition for each
+        // one of them.
+        foreach ($value as $column => $val) {
+          $query->$operation($field_info, $column, $val);
+        }
+      }
+      else {
+        // Just pick the first field column for the operation.
+        $columns = array_keys($field_info['columns']);
+        $column = $columns[0];
+        $query->$operation($field_info, $column, $value);
+      }
+    }
   }
 
 }
