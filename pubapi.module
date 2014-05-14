@@ -11,6 +11,7 @@ function pubapi_restws_resource_info() {
     $result[$type] = array(
       'label' => $info['label'],
       'class' => 'PubApiResourceController',
+      'properties' => $info['properties'],
     );
   }
   return $result;

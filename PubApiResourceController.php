@@ -4,11 +4,11 @@ class PubApiResourceController
   extends RestWSEntityResourceController
   implements RestWSQueryResourceControllerInterface {
 
-  protected $apiName, $apiMap, $apiSpec, $bundleName;
+  protected $apiName, $apiMap, $propertyInfo, $bundleName;
 
   public function __construct($name, $info) {
     $this->apiMap = pubapi_get_map();
-    $this->apiSpec = pubapi_get_structure();
+    $this->propertyInfo = $info['properties'];
     $this->apiName = $name;
 
     $this->entityType = $this->apiMap[$name]['entity'];
@@ -20,7 +20,7 @@ class PubApiResourceController
    * @see RestWSEntityResourceController::propertyInfo()
    */
   public function propertyInfo() {
-    return $this->apiSpec[$this->resource()]['properties'];
+    return $this->propertyInfo;
   }
 
   /**
@@ -34,10 +34,9 @@ class PubApiResourceController
    * @see RestWSResourceControllerInterface::wrapper()
    */
   public function wrapper($id) {
-    $info = $this->apiSpec[$this->resource()];
     $object = $this->objectLoad($id);
 
-    return entity_metadata_wrapper($this->resource(), $object, array('property info' => $info['properties']));
+    return entity_metadata_wrapper($this->resource(), $object, array('property info' => $this->propertyInfo));
   }
 
   protected function originalWrapper($id) {
@@ -82,7 +81,6 @@ class PubApiResourceController
     $object = new stdClass();
 
     // Get original entity.
-    $info = $this->apiSpec[$this->resource()];
     $original_wrapper = $this->originalWrapper($id);
 
     // If the wrapped entity is not of the correct bundle, bail now.
@@ -94,7 +92,7 @@ class PubApiResourceController
 
     // Add to our object according to our defined API property info.
     if ($map = $this->apiMap[$this->resource()]) {
-      foreach (array_keys($info['properties']) as $property) {
+      foreach (array_keys($this->propertyInfo) as $property) {
         if (array_key_exists($map[$property], $original_properties)) {
           $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
           // For now make a quick check for references, and get just the ID.
