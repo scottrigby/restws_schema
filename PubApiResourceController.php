@@ -4,12 +4,12 @@ class PubApiResourceController
   extends RestWSEntityResourceController
   implements RestWSQueryResourceControllerInterface {
 
-  protected $apiName, $apiMap, $propertyInfo, $bundleName;
+  protected $resource, $apiMap, $propertyInfo, $bundleName;
 
   public function __construct($name, $info) {
     $this->apiMap = pubapi_get_map();
     $this->propertyInfo = $info['properties'];
-    $this->apiName = $name;
+    $this->resource = $name;
 
     $this->entityType = $this->apiMap[$name]['entity'];
     $this->bundleName = $this->apiMap[$name]['bundle'];
@@ -65,7 +65,7 @@ class PubApiResourceController
    * @return string
    */
   public function resource() {
-    return $this->apiName;
+    return $this->resource;
   }
 
   /**
