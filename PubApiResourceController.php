@@ -95,17 +95,47 @@ class PubApiResourceController
       foreach (array_keys($this->propertyInfo) as $property) {
         if (array_key_exists($map[$property], $original_properties)) {
           $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
-          // For now make a quick check for references, and get just the ID.
+
+          // For now make a quick check for references, and get just the ID, or
+          // an array of IDs (depending on cardinality).
           // @todo abstract this with a getter callback wrapper or something for
           //   entityreference.
-          if (in_array($property, array('show', 'season', 'episode'))) {
-            $value = isset($value->nid) ? $value->nid : NULL;
+          // @see RestWSBaseFormat::getResourceReferenceValue
+          if (($field = field_info_field($map[$property])) && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
+            // Return an array of values no matter what.
+            $value = !is_array($value) ? array($value) : $value;
+            $values = array();
+            foreach ($value as $item) {
+              list($id,,,) = entity_extract_ids($type, $item);
+              global $base_url;
+              $target_resource = NULL;
+              if ($target_bundle = is_array($field['settings']['handler_settings']['target_bundles']) ? reset(array_keys($field['settings']['handler_settings']['target_bundles'])) : FALSE) {
+                // Get target resource from map. Assume one target bundle.
+                foreach ($this->apiMap as $r => $i) {
+                  if ($i['entity'] == $type && $i['bundle'] == $target_bundle) {
+                    $target_resource = $r;
+                    break;
+                  }
+                }
+              }
+              $values[] = (object) array(
+                'uri' => $base_url . base_path() . $this->resource() . '/' . $id . '.json',
+                'id' => $id,
+                'resource' => $target_resource,
+              );
+            }
+            $value = $values;
           }
-          // If the value is an array, it's a filtered text field. Example for
+          // Check for other things, like the body field. Example for
           // body: $wrapper->body->value->value(array('decode' => TRUE));
-          // @todo abstract this.
-          $value = is_object($value) ? $value->value(array('decode' => TRUE)) : $value;
-          $value = is_array($value) ? $original_wrapper->{$map[$property]}->value->value(array('decode' => TRUE)) : $value;
+          // @todo This is way to specific. Abstract the hell out of this.
+          //   Maybe get the column, like `$col = key($field['columns'])`.
+          elseif (is_array($value)) {
+            try {
+              $value = $original_wrapper->{$map[$property]}->value->value(array('decode' => TRUE));
+            }
+            catch(EntityMetadataWrapperException $e) {}
+          }
           $object->{$property} = $value;
         }
       }
