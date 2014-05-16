@@ -78,6 +78,8 @@ class PubApiResourceController
    *   An object matching the requested Publisher API object structure.
    */
   protected function objectLoad($id) {
+    global $base_url;
+
     $object = new stdClass();
 
     // Get original entity.
@@ -106,16 +108,13 @@ class PubApiResourceController
             $value = !is_array($value) ? array($value) : $value;
             $values = array();
             foreach ($value as $item) {
-              list($id,,,) = entity_extract_ids($type, $item);
-              global $base_url;
+              list($id,,$target_bundle) = entity_extract_ids($type, $item);
               $target_resource = NULL;
-              if ($target_bundle = is_array($field['settings']['handler_settings']['target_bundles']) ? reset(array_keys($field['settings']['handler_settings']['target_bundles'])) : FALSE) {
-                // Get target resource from map. Assume one target bundle.
-                foreach ($this->apiMap as $r => $i) {
-                  if ($i['entity'] == $type && $i['bundle'] == $target_bundle) {
-                    $target_resource = $r;
-                    break;
-                  }
+              // Get target resource from map.
+              foreach ($this->apiMap as $r => $i) {
+                if ($i['entity'] == $type && $i['bundle'] == $target_bundle) {
+                  $target_resource = $r;
+                  break;
                 }
               }
               $values[] = (object) array(
