@@ -98,8 +98,8 @@ class PubApiResourceController
         if (array_key_exists($map[$property], $original_properties)) {
           $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
 
-          // For now make a quick check for references, and get just the ID, or
-          // an array of IDs (depending on cardinality).
+          // For now make a quick check for references, and build an array of
+          // reference objects.
           // @todo abstract this with a getter callback wrapper or something for
           //   entityreference.
           // @see RestWSBaseFormat::getResourceReferenceValue
