@@ -66,7 +66,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 13,
@@ -158,7 +158,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 12,
@@ -197,7 +197,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 11,
@@ -321,7 +321,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 1,
@@ -360,7 +360,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 2,
@@ -473,6 +473,45 @@ function pubapi_example_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-page-field_seasons'
+  $field_instances['node-page-field_seasons'] = array(
+    'bundle' => 'page',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_seasons',
+    'label' => 'Seasons',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => -2,
+    ),
+  );
+
   // Exported field_instance: 'node-season-body'
   $field_instances['node-season-body'] = array(
     'bundle' => 'season',
@@ -518,6 +557,45 @@ function pubapi_example_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-season-field_episodes'
+  $field_instances['node-season-field_episodes'] = array(
+    'bundle' => 'season',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => 1,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_episodes',
+    'label' => 'Episodes',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => -2,
+    ),
+  );
+
   // Exported field_instance: 'node-season-field_show'
   $field_instances['node-season-field_show'] = array(
     'bundle' => 'season',
@@ -529,7 +607,7 @@ function pubapi_example_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'link' => FALSE,
+          'link' => 1,
         ),
         'type' => 'entityreference_label',
         'weight' => 1,
@@ -562,9 +640,11 @@ function pubapi_example_field_default_field_instances() {
   t('Body');
   t('Enter a comma-separated list of words to describe your content.');
   t('Episode');
+  t('Episodes');
   t('Genre');
   t('Image');
   t('Season');
+  t('Seasons');
   t('Show');
   t('Tags');
   t('Upload an image to go with this article.');
