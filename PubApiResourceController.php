@@ -118,6 +118,12 @@ class PubApiResourceController
                 }
               }
 
+              // @todo Get format programmatically. There is logic in
+              //   restws_page_callback() to get that properly, which is already
+              //   passed to restws_handle_request(), and down to
+              //   RestWSBaseFormat::viewResource. Add a patch to either 1. get
+              //   the format as a separate function, or 2. pass format name as
+              //   a param to $resourceController->wrapper.
               $values[] = (object) array(
                 'uri' => $base_url . base_path() . $target_resource . '/' . $id . '.json',
                 'resource' => $target_resource,
