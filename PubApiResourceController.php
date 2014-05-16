@@ -117,10 +117,11 @@ class PubApiResourceController
                   break;
                 }
               }
+
               $values[] = (object) array(
-                'uri' => $base_url . base_path() . $this->resource() . '/' . $id . '.json',
-                'id' => $id,
+                'uri' => $base_url . base_path() . $target_resource . '/' . $id . '.json',
                 'resource' => $target_resource,
+                'id' => $id,
               );
             }
             $value = $values;
