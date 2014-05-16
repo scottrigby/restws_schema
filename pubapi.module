@@ -18,38 +18,6 @@ function pubapi_restws_resource_info() {
 }
 
 /**
- * Implements hook_cer_default_presets().
- */
-function pubapi_cer_default_presets() {
-  // @todo Add some identifier in the spec so we know that a an API object
-  //   property should reference (single or multiple), another API object (and
-  //   which one).
-//  $apiMap = pubapi_get_map();
-//  foreach (pubapi_get_structure() as $resource => $info) {
-//    $properties = $info['properties'];
-//    $entityType = $apiMap[$resource]['entity'];
-//    $bundleName = $apiMap[$resource]['bundle'];
-//    $entityInfo = entity_get_info($apiMap[$resource]['entity']);
-//  }
-
-  $presets = array();
-
-  $preset = new CerPreset();
-  $preset->left = 'node:page:field_seasons';
-  $preset->right = 'node:season:field_show';
-  $preset->bidirectional = TRUE;
-  $presets[$preset->id] = $preset;
-
-  $preset = new CerPreset();
-  $preset->left = 'node:season:field_episodes';
-  $preset->right = 'node:episode:field_season';
-  $preset->bidirectional = TRUE;
-  $presets[$preset->id] = $preset;
-
-  return $presets;
-}
-
-/**
  * Gets the API to Entity property map.
  *
  * @return array

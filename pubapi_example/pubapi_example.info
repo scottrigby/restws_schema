@@ -1,6 +1,7 @@
 name = pubapi_example
 core = 7.x
 package = Other
+dependencies[] = cer
 dependencies[] = ctools
 dependencies[] = devel_generate
 dependencies[] = entityreference
@@ -14,6 +15,8 @@ dependencies[] = restws
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
+features[cer][] = 6976f7bd5d1933daf0a92f6a7015ae75
+features[cer][] = ad83632b6ce24f0558bbe6cba993a0a4
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
 features[field_base][] = body
