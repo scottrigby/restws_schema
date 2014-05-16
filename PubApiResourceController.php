@@ -104,7 +104,7 @@ class PubApiResourceController
           //   entityreference.
           // @see RestWSBaseFormat::getResourceReferenceValue
           if (($field = field_info_field($map[$property])) && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
-            // Return an array of values no matter what.
+            // Return an array of values, regardless of field cardinality.
             $value = !is_array($value) ? array($value) : $value;
             $values = array();
             foreach ($value as $item) {
