@@ -38,7 +38,8 @@ PubAPI example
 A feature for demo purposes only
 
 1. Enable 'pubapi_example' module (it will enable all necessary dependencies)
-2. Generate some dummy content in this order (so the entityreference fields have content to reference):
+2. Generate some dummy content in this order (so the entityreference fields have
+   content to reference):
     - `drush generate-content 5 --kill --types=page -y`
     - `drush generate-content 5 --kill --types=season -y`
     - `drush generate-content 5 --kill --types=episode -y`
