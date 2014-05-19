@@ -98,14 +98,23 @@ class PubApiResourceController
         if (array_key_exists($map[$property], $original_properties)) {
           $value = $original_wrapper->{$map[$property]}->value(array('sanitize' => TRUE));
 
+          // Do some specific things for fields.
+          if ($field = field_info_field($map[$property])) {
+            // We assume the first column is the primary value column. This is
+            // how Views gets the $real_field.
+            // @see field_views_field_default_views_data()
+            $column = key($field['columns']);
+
+            // Return an array of values, regardless of field cardinality.
+            $value = !is_array($value) ? array($value) : $value;
+          }
+
           // For now make a quick check for references, and build an array of
           // reference objects.
           // @todo abstract this with a getter callback wrapper or something for
           //   entityreference.
           // @see RestWSBaseFormat::getResourceReferenceValue
-          if (($field = field_info_field($map[$property])) && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
-            // Return an array of values, regardless of field cardinality.
-            $value = !is_array($value) ? array($value) : $value;
+          if ($field && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
             $values = array();
             foreach ($value as $item) {
               list($id,,$target_bundle) = entity_extract_ids($type, $item);
@@ -132,13 +141,14 @@ class PubApiResourceController
             }
             $value = $values;
           }
-          // Check for other things, like the body field. Example for
-          // body: $wrapper->body->value->value(array('decode' => TRUE));
-          // @todo This is way to specific. Abstract the hell out of this.
-          //   Maybe get the column, like `$col = key($field['columns'])`.
-          elseif (is_array($value)) {
+          // Check for other fields. Example for body:
+          // @code
+          // $wrapper->body->value->value(array('decode' => TRUE));
+          // @endcode
+          // Where the 2nd 'value' is the field column.
+          elseif ($field && is_array($value)) {
             try {
-              $value = $original_wrapper->{$map[$property]}->value->value(array('decode' => TRUE));
+              $value = $original_wrapper->{$map[$property]}->{$column}->value(array('decode' => TRUE));
             }
             catch(EntityMetadataWrapperException $e) {}
           }
