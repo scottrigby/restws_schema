@@ -104,9 +104,6 @@ class PubApiResourceController
             // how Views gets the $real_field.
             // @see field_views_field_default_views_data()
             $column = key($field['columns']);
-
-            // Return an array of values, regardless of field cardinality.
-            $value = !is_array($value) ? array($value) : $value;
           }
 
           // For now make a quick check for references, and build an array of
@@ -115,6 +112,9 @@ class PubApiResourceController
           //   entityreference.
           // @see RestWSBaseFormat::getResourceReferenceValue
           if ($field && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
+            // Return an array of values, regardless of field cardinality.
+            $value = !is_array($value) ? array($value) : $value;
+
             $values = array();
             foreach ($value as $item) {
               list($id,,$target_bundle) = entity_extract_ids($type, $item);
