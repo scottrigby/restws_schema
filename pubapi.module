@@ -200,6 +200,53 @@ function pubapi_get_structure() {
         'getter callback' => 'entity_property_verbatim_get',
       ),
     ),
+
+    $structure['gallery'] = array(
+      'label' => t('Gallery'),
+      'properties' => array(
+        'name' => array(
+          'type' => 'text',
+          'label' => t('Gallery name'),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'id' => array(
+          'type' => 'integer',
+          'label' => t('Gallery ID'),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'description' => array(
+          'type' => 'text',
+          'label' => t('Gallery description'),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'photos' => array(
+          'type' => 'file',
+          'label' => t("The gallery's photos"),
+          // @todo Refactor to use entity_metadata_field_file_get().
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'show' => array(
+          'type' => 'integer',
+          'label' => t("The gallery's show ID"),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'season' => array(
+          'type' => 'integer',
+          'label' => t("The gallery's season ID"),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'episode' => array(
+          'type' => 'integer',
+          'label' => t("The gallery's episode ID"),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+        'status' => array(
+          'type' => 'integer',
+          'label' => t('Gallery published status'),
+          'getter callback' => 'entity_property_verbatim_get',
+        ),
+      ),
+    ),
   );
 
   return $structure;
