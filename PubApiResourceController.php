@@ -141,6 +141,32 @@ class PubApiResourceController
             }
             $value = $values;
           }
+          // Check for image files.
+          // @todo Do this more properly with a custom getter callback.
+          elseif ($field && $field['type'] == 'image') {
+            $values = array();
+            foreach ($value as $key => $item) {
+              $values[$key] = array(
+                'alt' => $item['alt'],
+                'title' => $item['title'],
+                'mime' => $item['filemime'],
+              );
+              $values[$key]['sizes']['original'] = array(
+                'uri' => file_uri_target($item['uri']),
+                'height' => $item['height'],
+                'width' => $item['width'],
+              );
+              foreach(image_styles() as $style_name => $style) {
+                $values[$key]['sizes'][$style_name] = array(
+                  'uri' => image_style_url($style_name, $item['uri']),
+                  // @todo Do some checks here. Not all image styles offer this.
+                  'height' => $style['effects'][0]['data']['height'],
+                  'width' => $style['effects'][0]['data']['width'],
+                );
+              }
+            }
+            $value = $values;
+          }
           // Check for other fields. Example for body:
           // @code
           // $wrapper->body->value->value(array('decode' => TRUE));
