@@ -58,33 +58,27 @@ function pubapi_get_structure() {
       'name' => array(
         'type' => 'text',
         'label' => t('Show name'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'id' => array(
         'type' => 'integer',
         'label' => t('Show ID'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'description' => array(
         'type' => 'text',
         'label' => t('Show description'),
         // @todo Consider refactoring to use entity_metadata_field_text_get().
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'genre' => array(
         'type' => 'text',
         'label' => t('Show genre'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'seasons' => array(
         'type' => 'integer',
         'label' => t("The show's seasons IDs"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'status' => array(
         'type' => 'integer',
         'label' => t('Show published status'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
     ),
   );
@@ -95,32 +89,26 @@ function pubapi_get_structure() {
       'name' => array(
         'type' => 'text',
         'label' => t('Season name'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'id' => array(
         'type' => 'integer',
         'label' => t('Season ID'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'description' => array(
         'type' => 'text',
         'label' => t('Season description'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'show' => array(
         'type' => 'integer',
         'label' => t("The season's show ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'episode' => array(
         'type' => 'integer',
         'label' => t("The season's episodes IDs"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'status' => array(
         'type' => 'integer',
         'label' => t('Season published status'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
     ),
   );
@@ -131,32 +119,26 @@ function pubapi_get_structure() {
       'name' => array(
         'type' => 'text',
         'label' => t('Episode name'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'id' => array(
         'type' => 'integer',
         'label' => t('Episode ID'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'description' => array(
         'type' => 'text',
         'label' => t('Episode description'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'show' => array(
         'type' => 'integer',
         'label' => t("The episode's show ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'season' => array(
         'type' => 'integer',
         'label' => t("The episode's season ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'status' => array(
         'type' => 'integer',
         'label' => t('Episode published status'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
     ),
   );
@@ -167,37 +149,30 @@ function pubapi_get_structure() {
       'name' => array(
         'type' => 'text',
         'label' => t('Blog name'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'id' => array(
         'type' => 'integer',
         'label' => t('Blog ID'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'description' => array(
         'type' => 'text',
         'label' => t('Blog description'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'show' => array(
         'type' => 'integer',
         'label' => t("The blog's show ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'season' => array(
         'type' => 'integer',
         'label' => t("The blog's season ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'episode' => array(
         'type' => 'integer',
         'label' => t("The blog's episode ID"),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
       'status' => array(
         'type' => 'integer',
         'label' => t('Blog published status'),
-        'getter callback' => 'entity_property_verbatim_get',
       ),
     ),
 
@@ -207,43 +182,35 @@ function pubapi_get_structure() {
         'name' => array(
           'type' => 'text',
           'label' => t('Gallery name'),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'id' => array(
           'type' => 'integer',
           'label' => t('Gallery ID'),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'description' => array(
           'type' => 'text',
           'label' => t('Gallery description'),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'photos' => array(
           'type' => 'file',
           'label' => t("The gallery's photos"),
           // @todo Refactor to use entity_metadata_field_file_get().
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'show' => array(
           'type' => 'integer',
           'label' => t("The gallery's show ID"),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'season' => array(
           'type' => 'integer',
           'label' => t("The gallery's season ID"),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'episode' => array(
           'type' => 'integer',
           'label' => t("The gallery's episode ID"),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
         'status' => array(
           'type' => 'integer',
           'label' => t('Gallery published status'),
-          'getter callback' => 'entity_property_verbatim_get',
         ),
       ),
     ),
