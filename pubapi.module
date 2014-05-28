@@ -4,6 +4,11 @@
  * Implements hook_restws_resource_info().
  *
  * Adds a mapping layer between Publisher API and entity types.
+ *
+ * @return array
+ *   In addition to the return value of hook_restws_resource_info(), we also
+ *   include:
+ *   - properties: See the return value of hook_entity_property_info()
  */
 function pubapi_restws_resource_info() {
   $result = array();
@@ -46,8 +51,7 @@ function pubapi_get_map() {
  * @return array
  *   An associative array, containing:
  *   - label: The REST resource object label.
- *   - properties: An array of property information suitable for the $info param
- *     of entity_metadata_wrapper()
+ *   - properties: See the return value of hook_entity_property_info()
  */
 function pubapi_get_structure() {
   $structure = array();
