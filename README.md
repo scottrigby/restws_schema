@@ -90,8 +90,10 @@ Dependencies
 - PubAPI example
     - PubAPI
     - CTtools (for exportables)
+    - CORS (makes JS cross-origin resource sharing work, for example AngularJS)
     - Devel (to generate dummy content)
     - Entity reference (for references)
+    - Corresponding Entity References (reverse references)
     - Features (to store exportables)
     - Strongarm (to store example configs)
 
