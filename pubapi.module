@@ -23,6 +23,33 @@ function pubapi_restws_resource_info() {
 }
 
 /**
+ * Implements hook_restws_response_alter().
+ *
+ * @see RestWSBaseFormat::viewResource
+ *
+ * @todo Find out why the method used to override entityreference fields in
+ *   PubApiResourceController::objectLoad isn't working for file fields (when
+ *   file_entity module is enabled) - instead the return value of that function
+ *   becomes the 'id' key in the response.
+ */
+function pubapi_restws_response_alter(&$response, $function, $formatName) {
+  if ($function == 'viewResource'
+    && $formatName == 'json'
+    && module_exists('file_entity')) {
+    // We want to take over what file_entity does here, and not classify images
+    // as resources.
+    foreach ($response as $key => $value) {
+      // We want what we pass to the file_entity 'id' key to become the contents
+      // of the key, and to slay the current siblings (resource, uri, and id).
+      // Loop to find each response key that is a file_entity.
+      if (is_array($value) && isset($value['resource']) && $value['resource'] === 'file') {
+        $response[$key] = $response[$key]['id'];
+      }
+    }
+  }
+}
+
+/**
  * Gets the API to Entity property map.
  *
  * @return array
