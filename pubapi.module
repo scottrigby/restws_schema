@@ -79,6 +79,29 @@ function pubapi_replace_file_entity_resource(&$value) {
 }
 
 /**
+ * Implements hook_url_outbound_alter().
+ *
+ * Note this is the only way to append the format to the URI in
+ * restws_resource_uri() (for resource links, etc), other than patching
+ * restws module to do this for us.
+ *
+ * @todo Get format programmatically. There is logic in restws_page_callback()
+ *   to get that properly, which is already passed to restws_handle_request(),
+ *   and down to RestWSBaseFormat::viewResource - but not down to wrapper() or
+ *   read(). Though even if this were available there, we could not make use of
+ *   restws_resource_uri() because it has no concept of this. Hence this hook.
+ *   Add a patch to get the format as a separate function, so we can get that
+ *   here.
+ */
+function pubapi_url_outbound_alter(&$path, &$options, $original_path) {
+  // @todo Be less permissive than *. It should only be resource or resource/ID.
+  $pattern  = '/(' . implode('|', array_keys(pubapi_get_structure())) . ').*$/';
+  if (preg_match($pattern, $path)) {
+    $path = $path . '.json';
+  }
+}
+
+/**
  * Gets the API to Entity property map.
  *
  * @return array
