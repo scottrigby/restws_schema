@@ -44,6 +44,7 @@ A feature for demo purposes only
     - `drush generate-content 5 --kill --types=season -y`
     - `drush generate-content 5 --kill --types=episode -y`
     - `drush generate-content 5 --kill --types=article -y`
+    - `drush generate-content 5 --kill --types=gallery -y`
     - NOTE: The example module maps 'Page' to the 'Show' object in our API (as
       an arbitrary example that any bundle can be used)
 3. See results
