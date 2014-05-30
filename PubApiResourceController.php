@@ -108,9 +108,9 @@ class PubApiResourceController
 
           // For now make a quick check for references, and build an array of
           // reference objects.
-          // @todo abstract this with a getter callback wrapper or something for
-          //   entityreference.
-          // @see RestWSBaseFormat::getResourceReferenceValue
+          // @todo Abstract this by creating our own format handler, using
+          //   hook_restws_format_info_alter(), which extends RestWSFormatJSON,
+          //   and overrides RestWSBaseFormat::getResourceReferenceValue.
           if ($field && $field['type'] == 'entityreference' && $type = $field['settings']['target_type']) {
             // Return an array of values, regardless of field cardinality.
             $value = !is_array($value) ? array($value) : $value;

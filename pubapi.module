@@ -31,6 +31,11 @@ function pubapi_restws_resource_info() {
  *   PubApiResourceController::objectLoad isn't working for file fields (when
  *   file_entity module is enabled) - instead the return value of that function
  *   becomes the 'id' key in the response.
+ * @todo Find out why the photos data isn't passed at all without file_entity
+ *   module enabled. Is it because we're intercepting it too early in
+ *   PubApiResourceController::objectLoad, so the data doesn't match the schema
+ *   when passed to entity_metadata_wrapper() in
+ *   PubApiResourceController::wrapper?
  */
 function pubapi_restws_response_alter(&$response, $function, $formatName) {
   if ($function == 'viewResource'
