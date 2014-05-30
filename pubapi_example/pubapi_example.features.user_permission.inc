@@ -32,6 +32,16 @@ function pubapi_example_user_default_permissions() {
     'module' => 'restws',
   );
 
+  // Exported permission: 'access resource gallery'.
+  $permissions['access resource gallery'] = array(
+    'name' => 'access resource gallery',
+    'roles' => array(
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'restws',
+  );
+
   // Exported permission: 'access resource season'.
   $permissions['access resource season'] = array(
     'name' => 'access resource season',
