@@ -49,7 +49,7 @@ A feature for demo purposes only
       an arbitrary example that any bundle can be used)
 3. See results
     - Browse to our API's Show URI: show.json, show/ID.json
-    - Now repeat for Season, Episode, and Blog
+    - Now repeat for Season, Episode, Blog, and Gallery
     - Follow the referenced resources via the URI key
 
 
