@@ -38,19 +38,43 @@ function pubapi_restws_resource_info() {
  *   PubApiResourceController::wrapper?
  */
 function pubapi_restws_response_alter(&$response, $function, $formatName) {
-  if ($function == 'viewResource'
-    && $formatName == 'json'
-    && module_exists('file_entity')) {
-    // We want to take over what file_entity does here, and not classify images
-    // as resources.
-    foreach ($response as $key => $value) {
-      // We want what we pass to the file_entity 'id' key to become the contents
-      // of the key, and to slay the current siblings (resource, uri, and id).
-      // Loop to find each response key that is a file_entity.
-      if (is_array($value) && isset($value['resource']) && $value['resource'] === 'file') {
-        $response[$key] = $response[$key]['id'];
-      }
+  // We want to take over what file_entity does here, and not classify images as
+  // resources.
+  if (module_exists('file_entity')) {
+    switch ($function) {
+      case 'viewResource':
+        foreach ($response as &$value) {
+          pubapi_replace_file_entity_resource($value);
+        }
+        break;
+      case 'queryResource':
+        // This is an array of resources, under the 'list' key.
+        foreach ($response['list'] as &$delta) {
+          foreach ($delta as &$value) {
+            pubapi_replace_file_entity_resource($value);
+          }
+        }
+        break;
     }
+  }
+}
+
+/**
+ * Replaces a file_entity resource value with our custom controller-set value.
+ *
+ * @param mixed $value
+ *   By reference. A resource key value. Here we only care if it's the result of
+ *   a file field's referenced file_entity resource.
+ *
+ * @see pubapi_restws_response_alter()
+ * @see PubApiResourceController::objectLoad
+ */
+function pubapi_replace_file_entity_resource(&$value) {
+  // We want what we pass to the file_entity 'id' key to become the contents of
+  // the key, and to slay the current siblings (resource, uri, and id). Loop to
+  // find each response key that is a file_entity.
+  if (is_array($value) && isset($value['resource']) && $value['resource'] === 'file') {
+    $value = $value['id'];
   }
 }
 
