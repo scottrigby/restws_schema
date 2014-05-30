@@ -450,6 +450,13 @@ function pubapi_example_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_bundle_gallery';
+  $strongarm->value = 'gallery';
+  $export['pubapi_ui_bundle_gallery'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'pubapi_ui_bundle_season';
   $strongarm->value = 'season';
   $export['pubapi_ui_bundle_season'] = $strongarm;
@@ -474,6 +481,13 @@ function pubapi_example_strongarm() {
   $strongarm->name = 'pubapi_ui_entity_type_episode';
   $strongarm->value = 'node';
   $export['pubapi_ui_entity_type_episode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_entity_type_gallery';
+  $strongarm->value = 'node';
+  $export['pubapi_ui_entity_type_gallery'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -530,6 +544,62 @@ function pubapi_example_strongarm() {
   $strongarm->name = 'pubapi_ui_episode_property_status';
   $strongarm->value = 'status';
   $export['pubapi_ui_episode_property_status'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_description';
+  $strongarm->value = 'body';
+  $export['pubapi_ui_gallery_property_description'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_episode';
+  $strongarm->value = 'field_episode';
+  $export['pubapi_ui_gallery_property_episode'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_id';
+  $strongarm->value = 'nid';
+  $export['pubapi_ui_gallery_property_id'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_name';
+  $strongarm->value = 'title';
+  $export['pubapi_ui_gallery_property_name'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_photos';
+  $strongarm->value = 'field_photos';
+  $export['pubapi_ui_gallery_property_photos'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_season';
+  $strongarm->value = 'field_season';
+  $export['pubapi_ui_gallery_property_season'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_show';
+  $strongarm->value = 'field_show';
+  $export['pubapi_ui_gallery_property_show'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pubapi_ui_gallery_property_status';
+  $strongarm->value = 'status';
+  $export['pubapi_ui_gallery_property_status'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
