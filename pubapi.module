@@ -81,28 +81,46 @@ function pubapi_replace_file_entity_resource(&$value) {
 /**
  * Implements hook_url_outbound_alter().
  *
- * Note this is the only way to append the format to the URI in
- * restws_resource_uri() (for resource links, etc), other than patching restws
- * module to do this for us.
+ * Makes internal response links consistent with the format if explicitly set
+ * (example: '.json'), rather than set in the GET header (example: Content-Type
+ * application/json). In the former case, we want the URIs to reflect the
+ * explicit method. In the latter case, we assume headers will persist.
  *
- * @todo Get format programmatically. There is logic in restws_page_callback()
- *   to get that properly, which is already passed to restws_handle_request(),
- *   and down to RestWSBaseFormat::viewResource - but not down to wrapper() or
- *   read(). Though even if this were available there, we could not make use of
- *   restws_resource_uri() because it has no concept of this. Hence this hook.
- *   Add a patch to get the format as a separate function, so we can get that
- *   here.
+ * @see restws_resource_uri()
  */
 function pubapi_url_outbound_alter(&$path, &$options, $original_path) {
-  // The pattern should account for either a resource list link (example: show),
-  // or an individual resource link (example: show/5).
-  // @see restws_resource_uri().
-  $resource_list = '(' . implode('|', array_keys(pubapi_get_structure())) . ')';
-  $resource = $resource_list . '\/([0-9]*)';
-  $pattern = '/' . $resource_list . '|' . $resource . '$/';
-  if (preg_match($pattern, $path)) {
-    $path = $path . '.json';
+  if ($format = pubapi_get_format()) {
+    // The pattern should account for either a resource list link (example:
+    // show), or an individual resource link (example: show/5).
+    $resource_list = '(' . implode('|', array_keys(pubapi_get_structure())) . ')';
+    $resource = $resource_list . '\/([0-9]*)';
+    $pattern = '/' . $resource_list . '|' . $resource . '$/';
+    if (preg_match($pattern, $path)) {
+      $path = $path . '.json';
+    }
   }
+}
+
+/**
+ * Gets the REST format, if explicitly set.
+ *
+ * @return bool|RestWSFormatInterface
+ *   The format name, or FALSE if not explicitly set.
+ *
+ * @see restws_page_callback()
+ */
+function pubapi_get_format() {
+  $id_arg = arg(1);
+  $resource_arg = arg(0);
+  $format = FALSE;
+  if ($_SERVER['REQUEST_METHOD'] == 'GET' && ($pos = strpos($id_arg, '.')) && $format_name = substr($id_arg, $pos + 1)) {
+    $format = restws_format($format_name);
+  }
+  elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && ($pos = strpos($resource_arg, '.')) && $format_name = substr($resource_arg, $pos + 1)) {
+    $format = restws_format($format_name);
+  }
+
+  return $format;
 }
 
 /**
