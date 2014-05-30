@@ -82,8 +82,8 @@ function pubapi_replace_file_entity_resource(&$value) {
  * Implements hook_url_outbound_alter().
  *
  * Note this is the only way to append the format to the URI in
- * restws_resource_uri() (for resource links, etc), other than patching
- * restws module to do this for us.
+ * restws_resource_uri() (for resource links, etc), other than patching restws
+ * module to do this for us.
  *
  * @todo Get format programmatically. There is logic in restws_page_callback()
  *   to get that properly, which is already passed to restws_handle_request(),
@@ -94,8 +94,12 @@ function pubapi_replace_file_entity_resource(&$value) {
  *   here.
  */
 function pubapi_url_outbound_alter(&$path, &$options, $original_path) {
-  // @todo Be less permissive than *. It should only be resource or resource/ID.
-  $pattern  = '/(' . implode('|', array_keys(pubapi_get_structure())) . ').*$/';
+  // The pattern should account for either a resource list link (example: show),
+  // or an individual resource link (example: show/5).
+  // @see restws_resource_uri().
+  $resource_list = '(' . implode('|', array_keys(pubapi_get_structure())) . ')';
+  $resource = $resource_list . '\/([0-9]*)';
+  $pattern = '/' . $resource_list . '|' . $resource . '$/';
   if (preg_match($pattern, $path)) {
     $path = $path . '.json';
   }
