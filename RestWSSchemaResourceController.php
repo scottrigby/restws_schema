@@ -275,7 +275,7 @@ class RestWSSchemaResourceController
   /**
    * @see RestWSEntityResourceController::propertyQueryOperation()
    *
-   * We must override this in order to map the fields before querrying.
+   * We must override this in order to map the fields before querying.
    *
    * @todo Consider submitting a patch to restws for a new method
    *   queryPropertymap(). If the parent method gave another layer between
