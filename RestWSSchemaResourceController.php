@@ -78,8 +78,6 @@ class RestWSSchemaResourceController
    *   An object matching the requested RestWS Schema object structure.
    */
   protected function objectLoad($id) {
-    global $base_url;
-
     $object = new stdClass();
 
     // Get original entity.
