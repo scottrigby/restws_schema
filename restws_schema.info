@@ -1,0 +1,4 @@
+name = RestWS Schema
+core = 7.x
+dependencies[] = restws
+files[] = RestWSSchemaResourceController.php

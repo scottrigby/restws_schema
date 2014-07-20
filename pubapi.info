@@ -1,4 +1,0 @@
-name = pubapi
-core = 7.x
-dependencies[] = restws
-files[] = PubApiResourceController.php

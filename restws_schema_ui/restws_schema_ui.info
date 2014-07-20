@@ -1,0 +1,3 @@
+name = restws_schema_ui
+core = 7.x
+dependencies[] = restws_schema

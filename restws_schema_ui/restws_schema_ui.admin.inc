@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Publisher API UI forms.
+ * RestWS Schema UI forms.
  */
 
 /**
- * Publisher API settings form constructor.
+ * RestWS Schema settings form constructor.
  *
  * @ingroup forms
  * @see system_settings_form()
  */
-function pubapi_ui_settings($form, &$form_state) {
-  $structure = pubapi_get_structure();
+function restws_schema_ui_settings($form, &$form_state) {
+  $structure = restws_schema_get();
 
   foreach ($structure as $resource => $info) {
     $form[$resource] = array(
@@ -24,14 +24,14 @@ function pubapi_ui_settings($form, &$form_state) {
       '#prefix' => '<div id="' . $resource . '-bundle-wrapper">',
       '#suffix' => '</div>',
     );
-    pubapi_ui_bundle_settings($form[$resource], $form_state, $resource, $info);
+    restws_schema_ui_bundle_settings($form[$resource], $form_state, $resource, $info);
   }
 
   return system_settings_form($form);
 }
 
 /**
- * Form builder: Maps Publisher API keys to entity types, bundles & properties.
+ * Form builder: Maps RestWS Schema keys to entity types, bundles & properties.
  *
  * @param array $form
  *   By reference.
@@ -40,10 +40,10 @@ function pubapi_ui_settings($form, &$form_state) {
  * @param string $resource
  *   The restws resource key, as defined in hook_restws_resource_info().
  * @param array $info
- *   The resource info array, as returned by pubapi_get_structure().
+ *   The resource info array, as returned by restws_schema_get_structure().
  */
-function pubapi_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
-  $common = pubapi_ui_element_common($resource);
+function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
+  $common = restws_schema_ui_element_common($resource);
 
   $entity_type_info = entity_get_info();
   $entity_types = array();
@@ -52,7 +52,7 @@ function pubapi_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
   }
 
   // We want to reflect stored values, but prioritize current ajax interaction.
-  $key = "pubapi_ui_entity_type_{$resource}";
+  $key = "restws_schema_ui_entity_type_{$resource}";
   $entity_type_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
   $form[$key] = array(
     '#title' => t('Entity type'),
@@ -66,7 +66,7 @@ function pubapi_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
     foreach ($bundles as $bundle => $bundle_info) {
       $bundle_options[$bundle] = check_plain($bundle_info['label']);
     }
-    $key = "pubapi_ui_bundle_{$resource}";
+    $key = "restws_schema_ui_bundle_{$resource}";
     $bundle_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
     $form[$key] = array(
         '#title' => t('Bundle'),
@@ -89,13 +89,13 @@ function pubapi_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
     }
     // Get API resource properties.
     foreach ($info['properties'] as $property_name => $property_info) {
-      $key = "pubapi_ui_{$resource}_property_{$property_name}";
+      $key = "restws_schema_ui_{$resource}_property_{$property_name}";
       $property_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
       $form[$key] = array(
           '#title' => $property_info['label'],
           '#options' => $property_options,
           '#default_value' => $property_selected,
-        ) + pubapi_ui_element_common($resource, FALSE);
+        ) + restws_schema_ui_element_common($resource, FALSE);
     }
   }
 }
@@ -111,7 +111,7 @@ function pubapi_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
  * @return array
  *   An array of common form element items.
  */
-function pubapi_ui_element_common($resource, $ajax = TRUE) {
+function restws_schema_ui_element_common($resource, $ajax = TRUE) {
   $common = array(
     '#type' => 'select',
     '#empty_option' => t('- Please select -'),
@@ -120,7 +120,7 @@ function pubapi_ui_element_common($resource, $ajax = TRUE) {
   if ($ajax) {
     $common += array(
       '#ajax' => array(
-        'callback' => 'pubapi_ui_bundle_settings_ajax_callback',
+        'callback' => 'restws_schema_ui_bundle_settings_ajax_callback',
         'wrapper' => "{$resource}-bundle-wrapper",
         'effect' => 'fade',
       ),
@@ -130,11 +130,11 @@ function pubapi_ui_element_common($resource, $ajax = TRUE) {
 }
 
 /**
- * Ajax callback for pubapi_ui_settings().
+ * Ajax callback for restws_schema_ui_settings().
  *
  * @see ajax_form_callback()
  */
-function pubapi_ui_bundle_settings_ajax_callback($form, $form_state) {
+function restws_schema_ui_bundle_settings_ajax_callback($form, $form_state) {
   $form_state['rebuild'] = TRUE;
 
   // Find the parent elements.

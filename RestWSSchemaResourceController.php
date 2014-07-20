@@ -1,13 +1,13 @@
 <?php
 
-class PubApiResourceController
+class RestWSSchemaResourceController
   extends RestWSEntityResourceController
   implements RestWSQueryResourceControllerInterface {
 
   protected $resource, $apiMap, $propertyInfo, $bundleName;
 
   public function __construct($name, $info) {
-    $this->apiMap = pubapi_get_map();
+    $this->apiMap = restws_schema_get_map();
     $this->propertyInfo = $info['properties'];
     $this->resource = $name;
 
@@ -69,13 +69,13 @@ class PubApiResourceController
   }
 
   /**
-   * Loads a Publisher API object.
+   * Loads a RestWS Schema object.
    *
    * @param int $id
    *   The original entity ID.
    *
    * @return stdClass
-   *   An object matching the requested Publisher API object structure.
+   *   An object matching the requested RestWS Schema object structure.
    */
   protected function objectLoad($id) {
     global $base_url;

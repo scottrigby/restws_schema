@@ -1,103 +1,66 @@
-    o--o       o          O  o--o  o-O-o
-    |   |      |         / \ |   |   |
-    O--o  o  o O-o      o---oO--o    |
-    |     |  | |  |     |   ||       |
-    o     o--o o-o      o   oo     o-O-o
+RestWS Schema
+=============
 
 Installation
 ============
 
-- Install and update the PubAPI Drupal 7 module [per usual]
+- Install and update the restws_schema Drupal 7 module [per usual]
   (https://drupal.org/node/895232) (ideally with Drush)
-- Optionally enable pubapi_example feature.
+- Optionally enable restws_schema_ui module.
 
 Modules
 =======
 
-PubAPI
-------
+RestWS Schema
+-------------
 
 An API-only module, which extends RESTful Web Services
 
 - All resources can be accessed in a list by resource type. Examples:
     - URI: RESOURCE.json
     - Contains: The 'list' key is an array of individual resource objects.
-- Each invdividual resource can be accessed directly. Example for 'Show':
-  - URI: show/ID.json
+- Each invdividual resource can be accessed directly. Example:
+  - URI: RESOURCE/ID.json
   - Object keys are defined in the spec, including:
     - id: The current resource object ID
   - References (including corresponding references) are entityreference fields,
     and contain:
     - uri: The referenced resource object REST URI
-    - resource: The referenced resource name (example: 'season')
+    - resource: The referenced resource name
     - id: The referenced resource object ID
 
-PubAPI example
---------------
+RestWS Schema UI
+----------------
 
-A feature for demo purposes only
-
-1. Enable 'pubapi_example' module (it will enable all necessary dependencies)
-2. Generate some dummy content in this order (so the entityreference fields have
-   content to reference):
-    - `drush generate-content 5 --kill --types=page -y`
-    - `drush generate-content 5 --kill --types=season -y`
-    - `drush generate-content 5 --kill --types=episode -y`
-    - `drush generate-content 5 --kill --types=article -y`
-    - `drush generate-content 5 --kill --types=gallery -y`
-    - NOTE: The example module maps 'Page' to the 'Show' object in our API (as
-      an arbitrary example that any bundle can be used)
-3. See results
-    - Browse to our API's Show URI: show.json, show/ID.json
-    - Now repeat for Season, Episode, Blog, and Gallery
-    - Follow the referenced resources via the URI key
-
-
-PubAPI UI
----------
-
-A bundle/property mapper, and color-coded status alert, for PubAPI
+A bundle/property mapper, and color-coded status alert, for restws_schema.
 
 - Explore the mapper
-    - URL: admin/config/services/pubapi
-    - NOTE: this is built dynamically from a mock-up API schema (temporarily
-      defined in pubapi_get_structure(). We'll replace that with our final
-      schema once that's complete)
+    - URL: admin/config/services/restws_schema
 - Check out the status
     - URL: admin/reports/status (where it should be, with the other color-coded
       requirements reports)
-- See it work:
-    - After enabling the pubapi_example module, this will always be green, and
-      say: "The Publisher API is satisfied."
-- See it break:
-    - Disable the pubapi_example module: `drush dis pubapi_example -y`
-    - Delete the variables added by pubapi_example module, which satisfied the
-      mapping: `drush sqlq "delete from variable where name like 'pubapi%'"`
-    - Clear the caches `drush cc all`
-    - Status page should display a red error: "The Publisher API is not
+    - Status page should display a red error: "The RestWS Schema is not
       satisfied. Configure here."
     - Additionally the main config page (admin/config) will display an error:
       "One or more problems were detected with your Drupal installation. Check
       the status report for more information."
+- See it work:
+    - After mapping the restws_schema keys to Drupal entity equivalents, this
+      should be green, and say: "The RestWS Schema is satisfied."
 
 Dependencies
 ============
 
-- PubAPI
-    - RESTful Web Services (depends on Entity API)
-- PubAPI UI
-    - PubAPI
-- PubAPI example
-    - PubAPI
-    - CTtools (for exportables)
-    - CORS (makes JS cross-origin resource sharing work, for example AngularJS)
-    - Devel (to generate dummy content)
-    - Entity reference (for references)
-    - Corresponding Entity References (reverse references)
-    - Features (to store exportables)
-    - Strongarm (to store example configs)
+- RESTful Web Services (depends on Entity API)
 
-Credits
-=======
+Recommended
+===========
 
-- The NBCU O&TS Developer Working Group
+- CORS (makes JS cross-origin resource sharing work, for example AngularJS)
+- Entity reference (for references)
+- Corresponding Entity References (reverse references)
+
+Contributors
+============
+
+- [scottrigby](https://drupal.org/u/scottrigby)

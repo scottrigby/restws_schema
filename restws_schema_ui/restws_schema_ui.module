@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * RestWS Schema UI module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function restws_schema_ui_menu() {
+  $items = array();
+
+  $items['admin/config/services/restws_schema'] = array(
+    'title' => 'RestWS Schema mapping',
+    'description' => 'Map RestWS Schema to entity types and fields.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('restws_schema_ui_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'restws_schema_ui.admin.inc',
+  );
+
+  return $items;
+}

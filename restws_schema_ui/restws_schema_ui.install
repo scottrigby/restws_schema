@@ -2,38 +2,38 @@
 
 /**
  * @file
- * Publisher API UI installation.
+ * RestWS Schema UI installation.
  */
 
 /**
  * Implements hook_requirements().
  */
-function pubapi_ui_requirements($phase) {
+function restws_schema_ui_requirements($phase) {
   $requirements = array();
   $t = get_t();
 
   // Check Publisher API mapping configurations.
   if ($phase == 'runtime') {
     $ok = array(
-      'value' => $t('The Publisher API is satisfied.'),
+      'value' => $t('The RestWS Schema is satisfied.'),
       'severity' => REQUIREMENT_OK,
     );
     $warning = array(
-      'value' => $t('The Publisher API is not satisfied. <a href="@url">Configure here</a>.', array('@url' => url('admin/config/services/pubapi'))),
+      'value' => $t('The RestWS Schema is not satisfied. <a href="@url">Configure here</a>.', array('@url' => url('admin/config/services/restws_schema'))),
       'severity' => REQUIREMENT_ERROR,
     );
     $status = $ok;
 
-    $structure = pubapi_get_structure();
+    $structure = restws_schema_get();
     foreach ($structure as $resource => $info) {
-      $entity_type = variable_get("pubapi_ui_entity_type_{$resource}");
-      $bundle = variable_get("pubapi_ui_bundle_{$resource}");
+      $entity_type = variable_get("restws_schema_ui_entity_type_{$resource}");
+      $bundle = variable_get("restws_schema_ui_bundle_{$resource}");
       if (!$entity_type || !$bundle) {
         $status = $warning;
         break;
       }
       foreach ($info['properties'] as $property_name => $property_info) {
-        $property = variable_get("pubapi_ui_{$resource}_property_{$property_name}");
+        $property = variable_get("restws_schema_ui_{$resource}_property_{$property_name}");
         if (!$property) {
           $status = $warning;
           break 2;
@@ -41,8 +41,8 @@ function pubapi_ui_requirements($phase) {
       }
     }
 
-    $requirements['pubapi_ui'] = array(
-      'title' => $t('Publisher API'),
+    $requirements['restws_schema_ui'] = array(
+      'title' => $t('RestWS Schema'),
     ) + $status;
   }
 
