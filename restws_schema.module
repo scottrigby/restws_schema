@@ -134,7 +134,7 @@ function restws_schema_get_format() {
  *   - id: The entity ID key
  *   - ADDITIONAL PROPERTY INFO REQUIRED BY OUR API SCHEMA.
  */
-function restws_schema_get_map() {
+function restws_schema_map_get() {
   $map = array();
   foreach (restws_schema_get() as $resource => $info) {
     $map[$resource]['entity'] = variable_get("restws_schema_ui_entity_type_{$resource}");

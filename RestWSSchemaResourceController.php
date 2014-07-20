@@ -7,7 +7,7 @@ class RestWSSchemaResourceController
   protected $resource, $apiMap, $propertyInfo, $bundleName;
 
   public function __construct($name, $info) {
-    $this->apiMap = restws_schema_get_map();
+    $this->apiMap = restws_schema_map_get();
     $this->propertyInfo = $info['properties'];
     $this->resource = $name;
 
