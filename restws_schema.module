@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * API functions and hook implementations for restws_schema module.
+ */
+
+/**
  * Implements hook_restws_resource_info().
  *
  * Adds a mapping layer between RestWS Schema and entity types.

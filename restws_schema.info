@@ -1,4 +1,5 @@
 name = RestWS Schema
+description = Helps RESTful Web Services serve an arbitrary schema rather than Drupal's Entity schema.
 core = 7.x
 dependencies[] = restws
 files[] = RestWSSchemaResourceController.php
