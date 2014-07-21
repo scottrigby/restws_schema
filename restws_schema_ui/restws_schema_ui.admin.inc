@@ -8,6 +8,8 @@
 /**
  * RestWS Schema settings form constructor.
  *
+ * Maps RestWS Schema keys to entity types, bundles & properties.
+ *
  * @ingroup forms
  * @see system_settings_form()
  */
@@ -24,14 +26,14 @@ function restws_schema_ui_settings($form, &$form_state) {
       '#prefix' => '<div id="' . $resource . '-bundle-wrapper">',
       '#suffix' => '</div>',
     );
-    restws_schema_ui_bundle_settings($form[$resource], $form_state, $resource, $info);
+    restws_schema_ui_entity_type_settings($form[$resource], $form_state, $resource, $info);
   }
 
   return system_settings_form($form);
 }
 
 /**
- * Form builder: Maps RestWS Schema keys to entity types, bundles & properties.
+ * Form builder: Maps RestWS Schema keys to entity types.
  *
  * @param array $form
  *   By reference.
@@ -42,12 +44,9 @@ function restws_schema_ui_settings($form, &$form_state) {
  * @param array $info
  *   The resource info array, as returned by restws_schema_get_structure().
  */
-function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info) {
-  $common = restws_schema_ui_element_common($resource);
-
-  $entity_type_info = entity_get_info();
+function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, $info) {
   $entity_types = array();
-  foreach ($entity_type_info as $entity_type => $entity_info) {
+  foreach (entity_get_info() as $entity_type => $entity_info) {
     $entity_types[$entity_type] = check_plain($entity_info['label']);
   }
 
@@ -58,54 +57,95 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info
     '#title' => t('Entity type'),
     '#options' => $entity_types,
     '#default_value' => $entity_type_selected,
-  ) + $common;
+  ) + restws_schema_ui_element_common($resource);
 
   if ($entity_type_selected) {
-    $bundles = $entity_type_info[$entity_type_selected]['bundles'];
-    $bundle_options = array();
-    foreach ($bundles as $bundle => $bundle_info) {
-      $bundle_options[$bundle] = check_plain($bundle_info['label']);
-    }
-    $key = "restws_schema_ui_bundle_{$resource}";
-    $bundle_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
-    $form[$key] = array(
-        '#title' => t('Bundle'),
-        '#options' => $bundle_options,
-        '#default_value' => $bundle_selected,
-      ) + $common;
+    restws_schema_ui_bundle_settings($form, $form_state, $resource, $info, $entity_type_selected);
+  }
+}
 
-    // Get properties.
-    // Limit only to properties on the selected bundle.
-    // @see entity_get_all_property_info()
-    $entity_properties = entity_get_property_info($entity_type_selected);
-    $entity_properties += array('properties' => array(), 'bundles' => array());
-    // Add the selected bundle's properties.
-    if (isset($entity_properties['bundles'][$bundle_selected])) {
-      $bundle_info = $entity_properties['bundles'][$bundle_selected];
-      $bundle_info += array('properties' => array());
-      $entity_properties['properties'] += $bundle_info['properties'];
-    }
+/**
+ * Form builder: Maps RestWS Schema keys to bundles.
+ *
+ * @param array $form
+ *   By reference.
+ * @param array $form_state
+ *   By reference.
+ * @param string $resource
+ *   The restws resource key, as defined in hook_restws_resource_info().
+ * @param array $info
+ *   The resource info array, as returned by restws_schema_get_structure().
+ * @param string $entity_type_selected
+ *   The selected Entity type.
+ */
+function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info, $entity_type_selected) {
+  $entity_type_info = entity_get_info();
+  $bundles = $entity_type_info[$entity_type_selected]['bundles'];
+  $bundle_options = array();
+  foreach ($bundles as $bundle => $bundle_info) {
+    $bundle_options[$bundle] = check_plain($bundle_info['label']);
+  }
+  $key = "restws_schema_ui_bundle_{$resource}";
+  $bundle_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
+  $form[$key] = array(
+    '#title' => t('Bundle'),
+    '#options' => $bundle_options,
+    '#default_value' => $bundle_selected,
+  ) + restws_schema_ui_element_common($resource);
 
-    $property_options = array();
-    foreach ($entity_properties['properties'] as $property_name => $property_info) {
-      $property_info_label = array();
-      foreach(array('label', 'description') as $property_info_key) {
-        if (isset($property_info[$property_info_key])) {
-          $property_info_label[] = $property_info[$property_info_key];
-        }
+  if ($bundle_selected) {
+    restws_schema_ui_property_settings($form, $form_state, $resource, $info, $entity_type_selected, $bundle_selected);
+  }
+}
+
+/**
+ * Form builder: Maps RestWS Schema keys to properties.
+ *
+ * @param array $form
+ *   By reference.
+ * @param array $form_state
+ *   By reference.
+ * @param string $resource
+ *   The restws resource key, as defined in hook_restws_resource_info().
+ * @param array $info
+ *   The resource info array, as returned by restws_schema_get_structure().
+ * @param string $entity_type_selected
+ *   The selected Entity type.
+ * @param string $bundle_selected
+ *   The selected Bundle.
+ */
+function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $info, $entity_type_selected, $bundle_selected) {
+  // Get properties.
+  // Limit only to properties on the selected bundle.
+  // @see entity_get_all_property_info()
+  $entity_properties = entity_get_property_info($entity_type_selected);
+  $entity_properties += array('properties' => array(), 'bundles' => array());
+  // Add the selected bundle's properties.
+  if (isset($entity_properties['bundles'][$bundle_selected])) {
+    $bundle_info = $entity_properties['bundles'][$bundle_selected];
+    $bundle_info += array('properties' => array());
+    $entity_properties['properties'] += $bundle_info['properties'];
+  }
+
+  $property_options = array();
+  foreach ($entity_properties['properties'] as $property_name => $property_info) {
+    $property_info_label = array();
+    foreach(array('label', 'description') as $property_info_key) {
+      if (isset($property_info[$property_info_key])) {
+        $property_info_label[] = $property_info[$property_info_key];
       }
-      $property_options[$property_name] = implode(': ', $property_info_label);
     }
-    // Get API resource properties.
-    foreach ($info['properties'] as $property_name => $property_info) {
-      $key = "restws_schema_ui_{$resource}_property_{$property_name}";
-      $property_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
-      $form[$key] = array(
-          '#title' => $property_info['label'],
-          '#options' => $property_options,
-          '#default_value' => $property_selected,
-        ) + restws_schema_ui_element_common($resource, FALSE);
-    }
+    $property_options[$property_name] = implode(': ', $property_info_label);
+  }
+  // Get API resource properties.
+  foreach ($info['properties'] as $property_name => $property_info) {
+    $key = "restws_schema_ui_{$resource}_property_{$property_name}";
+    $property_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
+    $form[$key] = array(
+      '#title' => $property_info['label'],
+      '#options' => $property_options,
+      '#default_value' => $property_selected,
+    ) + restws_schema_ui_element_common($resource, FALSE);
   }
 }
 
