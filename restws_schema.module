@@ -140,15 +140,7 @@ function restws_schema_get_format() {
  *   - ADDITIONAL PROPERTY INFO REQUIRED BY THE DEFINED SCHEMA.
  */
 function restws_schema_map_get() {
-  $map = array();
-  foreach (restws_schema_get() as $resource => $info) {
-    $map[$resource]['entity'] = variable_get("restws_schema_ui_entity_type_{$resource}");
-    $map[$resource]['bundle'] = variable_get("restws_schema_ui_bundle_{$resource}");
-    foreach (array_keys($info['properties']) as $property_name) {
-      $map[$resource][$property_name] = variable_get("restws_schema_ui_{$resource}_property_{$property_name}");
-    }
-  }
-  return $map;
+  return variable_get('restws_schema_map', array());
 }
 
 /**

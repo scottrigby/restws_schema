@@ -30,7 +30,34 @@ function restws_schema_ui_settings($form, &$form_state) {
     restws_schema_ui_entity_type_settings($form[$resource], $form_state, $resource, $map);
   }
 
-  return system_settings_form($form);
+  // We don't use system_settings_form() because we want a single variable,
+  // rather than one variable per schema map key.
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  if (!empty($_POST) && form_get_errors()) {
+    drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
+  }
+  $form['#theme'] = 'system_settings_form';
+
+  return $form;
+}
+
+/**
+ * Form submission handler for restws_schema_ui_settings().
+ */
+function restws_schema_ui_settings_submit($form, &$form_state) {
+  form_state_values_clean($form_state);
+
+  $values = array();
+  foreach ($form_state['values'] as $key => $value) {
+    if (is_array($value) && isset($form_state['values']['array_filter'])) {
+      $value = array_keys(array_filter($value));
+    }
+    $values[$key] = $value;
+  }
+  variable_set('restws_schema_map', $values);
+
+  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**
@@ -162,8 +189,8 @@ function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $ma
  *   fall back to stored values if any.
  */
 function restws_schema_ui_get_selected($form_state, $resource, $map, $key, &$element) {
-  $element = $resource . '_' . $key;
-  $stored = isset($map[$resource][$key]) ? $map[$resource][$key] : '';
+  $element = $resource . ':' . $key;
+  $stored = isset($map[$element]) ? $map[$element] : '';
   $selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
 
   return $selected;
@@ -179,7 +206,6 @@ function restws_schema_ui_element_common() {
   return array(
     '#type' => 'select',
     '#empty_option' => t('- Please select -'),
-    '#required' => TRUE,
   );
 }
 
