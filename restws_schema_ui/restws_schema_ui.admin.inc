@@ -17,7 +17,7 @@ function restws_schema_ui_settings($form, &$form_state) {
   $schema = restws_schema_get();
   $map = restws_schema_map_get();
 
-  foreach (array_keys($schema) as $resource) {
+  foreach ($schema as $resource => $info) {
     $form[$resource] = array(
       '#type' => 'fieldset',
       '#title' => $info['label'],
