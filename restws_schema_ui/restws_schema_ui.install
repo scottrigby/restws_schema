@@ -24,17 +24,15 @@ function restws_schema_ui_requirements($phase) {
     );
     $status = $ok;
 
-    $structure = restws_schema_get();
-    foreach ($structure as $resource => $info) {
-      $entity_type = variable_get("restws_schema_ui_entity_type_{$resource}");
-      $bundle = variable_get("restws_schema_ui_bundle_{$resource}");
-      if (!$entity_type || !$bundle) {
+    $schema = restws_schema_get();
+    $map = restws_schema_map_get();
+    foreach ($schema as $resource => $info) {
+      if (empty($map["{$resource}:entity"]) || empty($map["{$resource}:bundle"])) {
         $status = $warning;
         break;
       }
-      foreach ($info['properties'] as $property_name => $property_info) {
-        $property = variable_get("restws_schema_ui_{$resource}_property_{$property_name}");
-        if (!$property) {
+      foreach (array_keys($info['properties']) as $name) {
+        if (empty($map["{$resource}:{$name}"])) {
           $status = $warning;
           break 2;
         }
