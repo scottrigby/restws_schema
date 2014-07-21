@@ -75,10 +75,19 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info
       ) + $common;
 
     // Get properties.
-    // @todo Consider limiting to only properties on the selected bundle.
-    $entity_properties = entity_get_all_property_info($entity_type_selected);
+    // Limit only to properties on the selected bundle.
+    // @see entity_get_all_property_info()
+    $entity_properties = entity_get_property_info($entity_type_selected);
+    $entity_properties += array('properties' => array(), 'bundles' => array());
+    // Add the selected bundle's properties.
+    if (isset($entity_properties['bundles'][$bundle_selected])) {
+      $bundle_info = $entity_properties['bundles'][$bundle_selected];
+      $bundle_info += array('properties' => array());
+      $entity_properties['properties'] += $bundle_info['properties'];
+    }
+
     $property_options = array();
-    foreach ($entity_properties as $property_name => $property_info) {
+    foreach ($entity_properties['properties'] as $property_name => $property_info) {
       $property_info_label = array();
       foreach(array('label', 'description') as $property_info_key) {
         if (isset($property_info[$property_info_key])) {
