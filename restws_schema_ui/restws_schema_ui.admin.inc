@@ -14,9 +14,9 @@
  * @see system_settings_form()
  */
 function restws_schema_ui_settings($form, &$form_state) {
-  $structure = restws_schema_get();
+  $schema = restws_schema_get();
 
-  foreach ($structure as $resource => $info) {
+  foreach ($schema as $resource => $info) {
     $form[$resource] = array(
       '#type' => 'fieldset',
       '#title' => $info['label'],
@@ -57,7 +57,7 @@ function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, 
     '#title' => t('Entity type'),
     '#options' => $entity_types,
     '#default_value' => $entity_type_selected,
-  ) + restws_schema_ui_element_common($resource);
+  ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
 
   if ($entity_type_selected) {
     restws_schema_ui_bundle_settings($form, $form_state, $resource, $info, $entity_type_selected);
@@ -91,7 +91,7 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $info
     '#title' => t('Bundle'),
     '#options' => $bundle_options,
     '#default_value' => $bundle_selected,
-  ) + restws_schema_ui_element_common($resource);
+  ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
 
   if ($bundle_selected) {
     restws_schema_ui_property_settings($form, $form_state, $resource, $info, $entity_type_selected, $bundle_selected);
@@ -145,37 +145,41 @@ function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $in
       '#title' => $property_info['label'],
       '#options' => $property_options,
       '#default_value' => $property_selected,
-    ) + restws_schema_ui_element_common($resource, FALSE);
+    ) + restws_schema_ui_element_common();
   }
 }
 
 /**
  * Defines common form element items.
  *
- * @param string $resource
- *   The restws resource key, as defined in hook_restws_resource_info().
- * @param bool $ajax
- *   Whether or not to attach the Ajax callback to this element. Defaults to
- *   TRUE.
  * @return array
  *   An array of common form element items.
  */
-function restws_schema_ui_element_common($resource, $ajax = TRUE) {
-  $common = array(
+function restws_schema_ui_element_common() {
+  return array(
     '#type' => 'select',
     '#empty_option' => t('- Please select -'),
     '#required' => TRUE,
   );
-  if ($ajax) {
-    $common += array(
-      '#ajax' => array(
-        'callback' => 'restws_schema_ui_bundle_settings_ajax_callback',
-        'wrapper' => "{$resource}-bundle-wrapper",
-        'effect' => 'fade',
-      ),
-    );
-  }
-  return $common;
+}
+
+/**
+ * Defines common form ajax items.
+ *
+ * @param string $resource
+ *   The restws resource key, as defined in hook_restws_resource_info(). This
+ *   tells ajax which resource form container to reload.
+ * @return array
+ *   An array of common form ajax items.
+ */
+function restws_schema_ui_ajax_common($resource) {
+  return array(
+    '#ajax' => array(
+      'callback' => 'restws_schema_ui_bundle_settings_ajax_callback',
+      'wrapper' => "{$resource}-bundle-wrapper",
+      'effect' => 'fade',
+    ),
+  );
 }
 
 /**
