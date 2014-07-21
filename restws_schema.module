@@ -137,7 +137,7 @@ function restws_schema_get_format() {
  *   - entity: The mapped entity type
  *   - bundle: The mapped bundle name
  *   - id: The entity ID key
- *   - ADDITIONAL PROPERTY INFO REQUIRED BY OUR API SCHEMA.
+ *   - ADDITIONAL PROPERTY INFO REQUIRED BY THE DEFINED SCHEMA.
  */
 function restws_schema_map_get() {
   $map = array();
@@ -152,14 +152,15 @@ function restws_schema_map_get() {
 }
 
 /**
- * Gets POC API schema info.
+ * Gets schema info.
  *
  * @return array
- *   An associative array, containing:
+ *   An associative array of resource info, keyed by restws resource key,
+ *   containing:
  *   - label: The REST resource object label.
- *   - properties: See the return value of hook_entity_property_info()
+ *   - properties: See the return value of hook_entity_property_info().
  *
- * @todo Support multiple schemas. Example URIs:
+ * @todo Consider supporting multiple schemas. Example URIs:
  *   - http://example.com/SCHEMA1/RESOURCE1/ID.json
  *   - http://example.com/SCHEMA1/RESOURCE2/ID.json
  *   - http://example.com/SCHEMA2/RESOURCE1/ID.json
