@@ -52,9 +52,10 @@ function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, 
   }
 
   // We want to reflect stored values, but prioritize current ajax interaction.
-  $key = "restws_schema_ui_entity_type_{$resource}";
-  $entity_type_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
-  $form[$key] = array(
+  $element = $resource . '_' . 'entity';
+  $stored = isset($map[$resource]['entity']) ? $map[$resource]['entity'] : '';
+  $entity_type_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+  $form[$element] = array(
     '#title' => t('Entity type'),
     '#options' => $entity_types,
     '#default_value' => $entity_type_selected,
@@ -86,9 +87,10 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $map,
   foreach ($bundles as $bundle => $bundle_info) {
     $bundle_options[$bundle] = check_plain($bundle_info['label']);
   }
-  $key = "restws_schema_ui_bundle_{$resource}";
-  $bundle_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
-  $form[$key] = array(
+  $element = $resource . '_' . 'bundle';
+  $stored = isset($map[$resource]['bundle']) ? $map[$resource]['bundle'] : '';
+  $bundle_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+  $form[$element] = array(
     '#title' => t('Bundle'),
     '#options' => $bundle_options,
     '#default_value' => $bundle_selected,
@@ -142,9 +144,10 @@ function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $ma
   }
   // Get restws_schema resource properties.
   foreach ($schema[$resource]['properties'] as $property_name => $property_info) {
-    $key = "restws_schema_ui_{$resource}_property_{$property_name}";
-    $property_selected = isset($form_state['input'][$key]) ? $form_state['input'][$key] : variable_get($key, '');
-    $form[$key] = array(
+    $element = $resource . '_' . $property_name;
+    $stored = isset($map[$resource][$property_name]) ? $map[$resource][$property_name] : '';
+    $property_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+    $form[$element] = array(
       '#title' => $property_info['label'],
       '#options' => $property_options,
       '#default_value' => $property_selected,
