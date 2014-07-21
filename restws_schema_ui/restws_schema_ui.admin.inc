@@ -156,6 +156,7 @@ function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $ma
  *   The restws_schema map key.
  * @param string $element
  *   By reference. An element key unique to this resource is set.
+ *
  * @return string
  *   The selected map value. We want to prioritize current ajax interaction, but
  *   fall back to stored values if any.
@@ -188,6 +189,7 @@ function restws_schema_ui_element_common() {
  * @param string $resource
  *   The restws resource key, as defined in hook_restws_resource_info(). This
  *   tells ajax which resource form container to reload.
+ *
  * @return array
  *   An array of common form ajax items.
  */
