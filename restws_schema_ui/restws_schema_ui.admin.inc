@@ -24,7 +24,7 @@ function restws_schema_ui_settings($form, &$form_state) {
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       // Add stable wrapper ID.
-      '#prefix' => '<div id="' . $resource . '-bundle-wrapper">',
+      '#prefix' => '<div id="' . $resource . '-wrapper">',
       '#suffix' => '</div>',
     );
     restws_schema_ui_entity_type_settings($form[$resource], $form_state, $resource, $map);
@@ -46,23 +46,20 @@ function restws_schema_ui_settings($form, &$form_state) {
  *   The restws_schema map array, as returned by restws_schema_map_get().
  */
 function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, $map) {
-  $entity_types = array();
-  foreach (entity_get_info() as $entity_type => $entity_info) {
-    $entity_types[$entity_type] = check_plain($entity_info['label']);
+  $options = array();
+  foreach (entity_get_info() as $name => $info) {
+    $options[$name] = check_plain($info['label']);
   }
 
-  // We want to reflect stored values, but prioritize current ajax interaction.
-  $element = $resource . '_' . 'entity';
-  $stored = isset($map[$resource]['entity']) ? $map[$resource]['entity'] : '';
-  $entity_type_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+  $entity = restws_schema_ui_get_selected($form_state, $resource, $map, 'entity', $element);
   $form[$element] = array(
-    '#title' => t('Entity type'),
-    '#options' => $entity_types,
-    '#default_value' => $entity_type_selected,
-  ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
+      '#title' => t('Entity type'),
+      '#options' => $options,
+      '#default_value' => $entity,
+    ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
 
-  if ($entity_type_selected) {
-    restws_schema_ui_bundle_settings($form, $form_state, $resource, $map, $entity_type_selected);
+  if ($entity) {
+    restws_schema_ui_bundle_settings($form, $form_state, $resource, $map, $entity);
   }
 }
 
@@ -77,27 +74,24 @@ function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, 
  *   The restws resource key, as defined in hook_restws_resource_info().
  * @param array $map
  *   The restws_schema map array, as returned by restws_schema_map_get().
- * @param string $entity_type
+ * @param string $entity
  *   The selected Entity type.
  */
-function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $map, $entity_type) {
-  $entity_type_info = entity_get_info();
-  $bundles = $entity_type_info[$entity_type]['bundles'];
-  $bundle_options = array();
-  foreach ($bundles as $bundle => $bundle_info) {
-    $bundle_options[$bundle] = check_plain($bundle_info['label']);
+function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $map, $entity) {
+  $entity_info = entity_get_info();
+  $options = array();
+  foreach ($entity_info[$entity]['bundles'] as $name => $info) {
+    $options[$name] = check_plain($info['label']);
   }
-  $element = $resource . '_' . 'bundle';
-  $stored = isset($map[$resource]['bundle']) ? $map[$resource]['bundle'] : '';
-  $bundle_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+  $bundle = restws_schema_ui_get_selected($form_state, $resource, $map, 'bundle', $element);
   $form[$element] = array(
-    '#title' => t('Bundle'),
-    '#options' => $bundle_options,
-    '#default_value' => $bundle_selected,
-  ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
+      '#title' => t('Bundle'),
+      '#options' => $options,
+      '#default_value' => $bundle,
+    ) + restws_schema_ui_element_common() + restws_schema_ui_ajax_common($resource);
 
-  if ($bundle_selected) {
-    restws_schema_ui_property_settings($form, $form_state, $resource, $map, $entity_type, $bundle_selected);
+  if ($bundle) {
+    restws_schema_ui_property_settings($form, $form_state, $resource, $map, $entity, $bundle);
   }
 }
 
@@ -112,47 +106,66 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $map,
  *   The restws resource key, as defined in hook_restws_resource_info().
  * @param array $map
  *   The restws_schema map array, as returned by restws_schema_map_get().
- * @param string $entity_type
+ * @param string $entity
  *   The selected Entity type.
  * @param string $bundle
  *   The selected Bundle.
  */
-function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $map, $entity_type, $bundle) {
-  $schema = restws_schema_get();;
+function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $map, $entity, $bundle) {
+  $schema = restws_schema_get();
 
-  // Get properties.
-  // Limit only to properties on the selected bundle.
-  // @see entity_get_all_property_info()
-  $entity_properties = entity_get_property_info($entity_type);
-  $entity_properties += array('properties' => array(), 'bundles' => array());
-  // Add the selected bundle's properties.
-  if (isset($entity_properties['bundles'][$bundle])) {
-    $bundle_info = $entity_properties['bundles'][$bundle];
-    $bundle_info += array('properties' => array());
-    $entity_properties['properties'] += $bundle_info['properties'];
+  // Get properties of the entity type.
+  $info = entity_get_property_info($entity);
+  $properties = isset($info['properties']) ? $info['properties'] : array();
+  // Get properties of the selected bundle.
+  if (isset($info['bundles'][$bundle]['properties'])) {
+    $properties += $info['bundles'][$bundle]['properties'];
   }
 
-  $property_options = array();
-  foreach ($entity_properties['properties'] as $property_name => $property_info) {
-    $property_info_label = array();
-    foreach(array('label', 'description') as $property_info_key) {
-      if (isset($property_info[$property_info_key])) {
-        $property_info_label[] = $property_info[$property_info_key];
+  $options = array();
+  foreach ($properties as $name => $info) {
+    $label = array();
+    foreach(array('label', 'description') as $key) {
+      if (isset($info[$key])) {
+        $label[] = $info[$key];
       }
     }
-    $property_options[$property_name] = implode(': ', $property_info_label);
+    $options[$name] = implode(': ', $label);
   }
   // Get restws_schema resource properties.
-  foreach ($schema[$resource]['properties'] as $property_name => $property_info) {
-    $element = $resource . '_' . $property_name;
-    $stored = isset($map[$resource][$property_name]) ? $map[$resource][$property_name] : '';
-    $property_selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+  foreach ($schema[$resource]['properties'] as $name => $info) {
+    $property = restws_schema_ui_get_selected($form_state, $resource, $map, $name, $element);
     $form[$element] = array(
-      '#title' => $property_info['label'],
-      '#options' => $property_options,
-      '#default_value' => $property_selected,
-    ) + restws_schema_ui_element_common();
+        '#title' => $info['label'],
+        '#options' => $options,
+        '#default_value' => $property,
+      ) + restws_schema_ui_element_common();
   }
+}
+
+/**
+ * Gets the selected map value of an element.
+ *
+ * @param array $form_state
+ *   The form state. This detects ajax interaction.
+ * @param string $resource
+ *   The restws resource key, as defined in hook_restws_resource_info().
+ * @param array $map
+ *   The restws_schema map array, as returned by restws_schema_map_get().
+ * @param string $key
+ *   The restws_schema map key.
+ * @param string $element
+ *   By reference. An element key unique to this resource is set.
+ * @return string
+ *   The selected map value. We want to prioritize current ajax interaction, but
+ *   fall back to stored values if any.
+ */
+function restws_schema_ui_get_selected($form_state, $resource, $map, $key, &$element) {
+  $element = $resource . '_' . $key;
+  $stored = isset($map[$resource][$key]) ? $map[$resource][$key] : '';
+  $selected = isset($form_state['input'][$element]) ? $form_state['input'][$element] : $stored;
+
+  return $selected;
 }
 
 /**
@@ -181,8 +194,8 @@ function restws_schema_ui_element_common() {
 function restws_schema_ui_ajax_common($resource) {
   return array(
     '#ajax' => array(
-      'callback' => 'restws_schema_ui_bundle_settings_ajax_callback',
-      'wrapper' => "{$resource}-bundle-wrapper",
+      'callback' => 'restws_schema_ui_settings_ajax_callback',
+      'wrapper' => "{$resource}-wrapper",
       'effect' => 'fade',
     ),
   );
@@ -193,7 +206,7 @@ function restws_schema_ui_ajax_common($resource) {
  *
  * @see ajax_form_callback()
  */
-function restws_schema_ui_bundle_settings_ajax_callback($form, $form_state) {
+function restws_schema_ui_settings_ajax_callback($form, $form_state) {
   $form_state['rebuild'] = TRUE;
 
   // Find the parent elements.
