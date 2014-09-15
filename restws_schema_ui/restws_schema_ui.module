@@ -22,3 +22,33 @@ function restws_schema_ui_menu() {
 
   return $items;
 }
+
+/**
+ * Gets RestWS Schema mapping status.
+ *
+ * @return array
+ *   An array containing list of unmapped properties.
+ *   An empty array is returned if all properties are mapped.
+ */
+function restws_schema_ui_get_mapping_status() {
+  $unmapped_properties = array();
+
+  $schema = restws_schema_get();
+  $map = restws_schema_map_get();
+
+  foreach ($schema as $resource => $info) {
+    if (empty($map["{$resource}:entity"])) {
+      $unmapped_properties[] = "{$resource}:entity";
+    }
+    if (empty($map["{$resource}:bundle"])) {
+      $unmapped_properties[] = "{$resource}:bundle";
+    }
+    foreach (array_keys($info['properties']) as $name) {
+      if (empty($map["{$resource}:{$name}"])) {
+        $unmapped_properties[] = "{$resource}:{$name}";
+      }
+    }
+  }
+
+  return $unmapped_properties;
+}
