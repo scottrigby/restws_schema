@@ -17,6 +17,20 @@ function restws_schema_ui_settings($form, &$form_state) {
   $schema = restws_schema_get();
   $map = restws_schema_map_get();
 
+  $unmapped_properties = restws_schema_ui_get_mapping_status();
+  if (!empty($unmapped_properties)) {
+    $form['mapping_status'] = array(
+      '#type' => 'markup',
+      '#markup' => 'The following resources are not mapped.' .
+        theme_item_list(array(
+          'items' => $unmapped_properties,
+          'type' => 'ul',
+          'title' => '',
+          'attributes' => array(),
+        ))
+    );
+  }
+
   foreach ($schema as $resource => $info) {
     $form[$resource] = array(
       '#type' => 'fieldset',
