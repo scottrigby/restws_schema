@@ -14,31 +14,28 @@ function restws_schema_ui_requirements($phase) {
 
   // Check Publisher API mapping configurations.
   if ($phase == 'runtime') {
-    $ok = array(
-      'value' => $t('The RestWS Schema is satisfied.'),
-      'severity' => REQUIREMENT_OK,
-    );
-    $warning = array(
-      'value' => $t('The RestWS Schema is not satisfied. <a href="@url">Configure here</a>.', array('@url' => url('admin/config/services/restws_schema'))),
-      'severity' => REQUIREMENT_ERROR,
-    );
-    $status = $ok;
+    $unmapped_properties = restws_schema_ui_get_mapping_status();
 
-    $schema = restws_schema_get();
-    $map = restws_schema_map_get();
-    foreach ($schema as $resource => $info) {
-      if (empty($map["{$resource}:entity"]) || empty($map["{$resource}:bundle"])) {
-        $status = $warning;
-        break;
-      }
-      foreach (array_keys($info['properties']) as $name) {
-        if (empty($map["{$resource}:{$name}"])) {
-          $status = $warning;
-          break 2;
-        }
-      }
+    if (empty($unmapped_properties)) {
+      $status = array(
+        'value' => $t('The RestWS Schema is satisfied.'),
+        'severity' => REQUIREMENT_OK,
+      );
     }
-
+    else {
+      $status = array(
+        'value' => $t('The RestWS Schema is not satisfied. !configure',
+          array('!configure' => l($t('Configure here'), 'admin/config/services/restws_schema'))),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => '<p>'. $t('The following resources are not mapped:') . '</p>' .
+          theme_item_list(array(
+            'items' => $unmapped_properties,
+            'type' => 'ul',
+            'title' => '',
+            'attributes' => array(),
+          )),
+      );
+    }
     $requirements['restws_schema_ui'] = array(
       'title' => $t('RestWS Schema'),
     ) + $status;
