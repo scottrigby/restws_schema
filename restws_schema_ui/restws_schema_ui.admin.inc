@@ -91,6 +91,7 @@ function restws_schema_ui_entity_type_settings(&$form, &$form_state, $resource, 
   foreach (entity_get_info() as $name => $info) {
     $options[$name] = check_plain($info['label']);
   }
+  asort($options, SORT_NATURAL | SORT_FLAG_CASE);
 
   $entity = restws_schema_ui_get_selected($form_state, $resource, $map, 'entity', $element);
   $form[$element] = array(
@@ -124,6 +125,8 @@ function restws_schema_ui_bundle_settings(&$form, &$form_state, $resource, $map,
   foreach ($entity_info[$entity]['bundles'] as $name => $info) {
     $options[$name] = check_plain($info['label']);
   }
+  asort($options, SORT_NATURAL | SORT_FLAG_CASE);
+
   $bundle = restws_schema_ui_get_selected($form_state, $resource, $map, 'bundle', $element);
   $form[$element] = array(
       '#title' => t('Bundle'),
@@ -173,6 +176,8 @@ function restws_schema_ui_property_settings(&$form, &$form_state, $resource, $ma
     }
     $options[$name] = implode(': ', $label);
   }
+  asort($options, SORT_NATURAL | SORT_FLAG_CASE);
+
   // Get restws_schema resource properties.
   foreach ($schema[$resource]['properties'] as $name => $info) {
     $property = restws_schema_ui_get_selected($form_state, $resource, $map, $name, $element);
