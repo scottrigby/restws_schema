@@ -51,14 +51,14 @@ A bundle/property mapper, and color-coded status alert, for restws_schema.
 Dependencies
 ============
 
-- RESTful Web Services (depends on Entity API)
+- [RESTful Web Services](https://www.drupal.org/project/restws) (depends on Entity API)
 
 Recommended
 ===========
 
-- CORS (makes JS cross-origin resource sharing work, for example AngularJS)
-- Entity reference (for references)
-- Corresponding Entity References (reverse references)
+- [CORS](https://www.drupal.org/project/cors) (makes JS cross-origin resource sharing work, for example AngularJS)
+- [Entity reference](https://www.drupal.org/project/entityreference) (for references)
+- [Corresponding Entity References](https://www.drupal.org/project/cer) (reverse references)
 
 Contributors
 ============
